@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'FavPage.dart';
+import 'CatCatalog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'fav_page.dart';
 import 'cat_details.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
           selectedItemColor: Color.fromARGB(255, 255, 160, 65),
           )
       ),
-      home: const MyHomePage(),
+      home: const CatCatalogue(),
     );
   }
 }
