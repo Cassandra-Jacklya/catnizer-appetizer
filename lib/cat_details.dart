@@ -1,3 +1,5 @@
+import 'package:catnizer/fav_page.dart';
+import 'package:catnizer/main.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +12,41 @@ class CatDetails extends StatefulWidget {
 }
 
 class _CatDetailsState extends State<CatDetails> {
-  int _selectedIndex = 0;
+
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+      //   Navigator.pushReplacement(
+      //   context,
+      //   PageRouteBuilder(
+      //       pageBuilder: (context, anim1, anim2) => const CatCatalog(),
+      //       transitionDuration: Duration.zero),
+      // );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const MyHomePage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const FavPage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      default:
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +68,9 @@ class _CatDetailsState extends State<CatDetails> {
             ),
           ],
           currentIndex: _selectedIndex,
-          onTap: (value) {
-            
-          },
+          onTap: _onItemTapped,
+          unselectedItemColor: const Color.fromARGB(255, 154, 87, 20),
+          selectedItemColor: const Color.fromARGB(255, 255, 160, 65),
         ),
       body: Center(
         child: Column(
