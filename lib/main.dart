@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'FavPage.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -13,9 +14,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        appBarTheme:  const AppBarTheme(color: Color.fromARGB(255, 255, 160, 65)),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          unselectedItemColor: Color.fromARGB(255, 154, 87, 20),
+          selectedItemColor: Color.fromARGB(255, 255, 160, 65),
+          )
       ),
-      home: const MyHomePage(),
+      home: const FavPage(),
     );
   }
 }
