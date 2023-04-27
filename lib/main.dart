@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'FavPage.dart';
+import 'fav_page.dart';
 
 
 void main() {
