@@ -59,6 +59,7 @@ flutter:
 
   assets:
     - assets/photos/
+    - assets/catimage/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -66,14 +67,6 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/catimage/1.png
-    - assets/catimage/2.png
-    - assets/catimage/3.png
-    - assets/catimage/4.png
-    - assets/catimage/5.png
-    - assets/catimage/6.png
-    - assets/catimage/7.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

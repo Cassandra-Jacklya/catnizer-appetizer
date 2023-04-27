@@ -1,3 +1,4 @@
+import 'package:catnizer/CatCatalog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
@@ -19,12 +20,12 @@ class _FavPageState extends State<FavPage> {
     });
     switch (index) {
       case 0:
-      //   Navigator.pushReplacement(
-      //   context,
-      //   PageRouteBuilder(
-      //       pageBuilder: (context, anim1, anim2) => const CatCatalog(),
-      //       transitionDuration: Duration.zero),
-      // );
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const CatCatalogue(),
+            transitionDuration: Duration.zero),
+      );
         break;
       case 1:
         Navigator.pushReplacement(

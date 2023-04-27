@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           selectedItemColor: Color.fromARGB(255, 255, 160, 65),
           )
       ),
-      home: const CatCatalogue(),
+      home: const MyHomePage(),
     );
   }
 }
@@ -78,14 +78,63 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
+    _timer?.cancel();
+  }
+
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const CatCatalogue(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      case 1:
+        break;
+      case 2:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const FavPage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      default:
+    }
   }
 
   int _current = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Catnizer"),),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem> [
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.cat),
+            label: 'Cats',
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.heart),
+            label: 'Likes',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
         body: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,59 +235,5 @@ class _MyHomePageState extends State<MyHomePage> {
           ],)
           
         ]));
-
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-      //   Navigator.pushReplacement(
-      //   context,
-      //   PageRouteBuilder(
-      //       pageBuilder: (context, anim1, anim2) => const CatCatalog(),
-      //       transitionDuration: Duration.zero),
-      // );
-        break;
-      case 1:
-        break;
-      case 2:
-        Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const FavPage(),
-            transitionDuration: Duration.zero),
-      );
-        break;
-      default:
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Main Page"),),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem> [
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.cat),
-            label: 'Cats',
-            ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-        ),
-    );
   }
 }

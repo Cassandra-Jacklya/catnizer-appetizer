@@ -1,10 +1,14 @@
+import 'package:catnizer/main.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
 // import 'cat_details.dart';
 import 'dart:io';
+
+import 'fav_page.dart';
 
 Future<List<Cat>> fetchCat() async {
   int pageNumber = 0;
@@ -78,17 +82,68 @@ class CatCatalogue extends StatefulWidget {
 class _CatCatalogue extends State<CatCatalogue> {
   late Future<List<Cat>> _cat;
 
+
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+              pageBuilder: (context, anim1, anim2) => const MyHomePage(),
+              transitionDuration: Duration.zero),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const FavPage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      default:
+    }
+  }
+  
   @override
   void initState() {
     super.initState();
     _cat = fetchCat();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Cat Catalogue'),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem> [
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.cat),
+            label: 'Cats',
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.heart),
+            label: 'Likes',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
         ),
         body: FutureBuilder<List<Cat>>(
           future: _cat,
