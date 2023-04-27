@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'CatCatalog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'fav_page.dart';
-import 'cat_details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,9 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _updateCatFact() {
     _getCatFact().then((value) {
-      setState(() {
-        _catFact = value;
-      });
+      if (mounted) {
+        setState(() {
+          _catFact = value;
+        });
+      }
     });
   }
 
@@ -85,9 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+      if (mounted) {
+        setState(() {
+        _selectedIndex = index;
+      });
+    }
 
     switch (index) {
       case 0:

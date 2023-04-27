@@ -1,11 +1,15 @@
-import 'package:catnizer/fav_page.dart';
-import 'package:catnizer/main.dart';
+import 'fav_page.dart';
+import 'main.dart';
+import 'cat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 
+
 class CatDetails extends StatefulWidget {
-  const CatDetails({super.key});
+  const CatDetails({super.key, required this.cat});
+
+  final Cat cat;
 
   @override
   State<CatDetails> createState() => _CatDetailsState();
@@ -76,7 +80,7 @@ class _CatDetailsState extends State<CatDetails> {
         child: Column(
           children: [
             Flexible(
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: Card(
                   // Set the shape of the card using a rounded rectangle border with a 8 pixel radius
@@ -86,8 +90,7 @@ class _CatDetailsState extends State<CatDetails> {
                   // Set the clip behavior of the card
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   // Define the child widgets of the card
-                  child: Image.asset(
-                    ('assets/photos/cat_meme.jpg'),
+                  child: Image.network(widget.cat.imageLink.toString(),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -99,7 +102,7 @@ class _CatDetailsState extends State<CatDetails> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Name: "),
-                  const Text("Catnizer"),
+                  Text(widget.cat.name ?? ''),
                 ],
               ),
             ),
@@ -109,7 +112,7 @@ class _CatDetailsState extends State<CatDetails> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Bio: "),
-                  const Text("I love you but do you love me?"),
+                  Text(widget.cat.origin ?? ''),
                 ],
               ),
             ),
