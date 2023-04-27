@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'fav_page.dart';
+import 'cat_details.dart';
 
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
           selectedItemColor: Color.fromARGB(255, 255, 160, 65),
           )
       ),
-      home: const FavPage(),
+      home: const CatDetails(),
     );
   }
 }
