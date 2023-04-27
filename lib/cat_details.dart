@@ -1,9 +1,11 @@
+import 'CatCatalog.dart';
 import 'fav_page.dart';
 import 'main.dart';
 import 'cat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 
 class CatDetails extends StatefulWidget {
@@ -25,12 +27,12 @@ class _CatDetailsState extends State<CatDetails> {
     });
     switch (index) {
       case 0:
-      //   Navigator.pushReplacement(
-      //   context,
-      //   PageRouteBuilder(
-      //       pageBuilder: (context, anim1, anim2) => const CatCatalog(),
-      //       transitionDuration: Duration.zero),
-      // );
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const CatCatalogue(),
+            transitionDuration: Duration.zero),
+      );
         break;
       case 1:
         Navigator.pushReplacement(
@@ -113,6 +115,18 @@ class _CatDetailsState extends State<CatDetails> {
                 children: [
                   const Text("Bio: "),
                   Text(widget.cat.origin ?? ''),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Add to Favourites"),
+                  IconButton(
+                    onPressed: () {}, 
+                    icon: const FaIcon(FontAwesomeIcons.heartCirclePlus)),
                 ],
               ),
             ),
