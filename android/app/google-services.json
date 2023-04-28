@@ -29,6 +29,13 @@
             {
               "client_id": "355358501463-qhk1j67gkgc7d9gct6hs5l7pnuhulafd.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "355358501463-g0isu8682e9690a87h5c8nkq7g8j0n89.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.catnizer"
+              }
             }
           ]
         }

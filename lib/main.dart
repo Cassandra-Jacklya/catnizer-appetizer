@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:catnizer/auth_views/login_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'CatCatalog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'fav_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 
 void main() {
   runApp(const MyApp());
@@ -79,8 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    super.dispose();
     _timer?.cancel();
+    super.dispose();
   }
 
   int _selectedIndex = 1;
@@ -235,8 +238,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          ],)
-          
+          ],),
+          TextButton(
+            onPressed: () async {
+              Navigator.push(context, 
+              MaterialPageRoute(builder: (context) => const LoginView()));
+            }, 
+            child: const Text("Login"))
         ]));
   }
 }
