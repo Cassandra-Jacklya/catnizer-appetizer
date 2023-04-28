@@ -5,7 +5,6 @@ import 'main.dart';
 import 'cat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/services.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class CatDetails extends StatefulWidget {
@@ -56,7 +55,6 @@ class _CatDetailsState extends State<CatDetails> {
   }
 
   Future<void> addFavourite(Cat cat) {
-
     return cats.add({
       'name': cat.name,
       'origin': cat.origin,
@@ -75,7 +73,10 @@ class _CatDetailsState extends State<CatDetails> {
         content: AwesomeSnackbarContent(
           title: "${cat.name} added to favourites!", 
           message: "Meow! Couldn't add me to favourites :(", 
-          contentType: ContentType.success));
+          contentType: ContentType.success,
+          color: const Color.fromARGB(255, 154, 87, 20),
+        ),
+      );
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
