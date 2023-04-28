@@ -11,7 +11,7 @@ import 'fav_page.dart';
 Future<List<Cat>> fetchCat() async {
   int pageNumber = 0;
   final catCatalogue = <Cat>[];
-  while (pageNumber <= 2) {
+  while (pageNumber <= 5) {
     final response = await http.get(
       Uri.parse(
           'https://api.api-ninjas.com/v1/cats?min_weight=1&offset=$pageNumber'),
@@ -44,6 +44,8 @@ Future<List<Cat>> fetchCat() async {
   return catCatalogue;
 }
 
+
+
 class CatCatalogue extends StatefulWidget {
   const CatCatalogue({super.key});
 
@@ -56,7 +58,7 @@ class _CatCatalogue extends State<CatCatalogue> {
 
 
   int _selectedIndex = 0;
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
