@@ -7,14 +7,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'cat.dart';
 import 'fav_page.dart';
+import 'package:transparent_image/transparent_image.dart';
 
-Future<List<Cat>> fetchCat() async {
-  int pageNumber = 0;
-  final catCatalogue = <Cat>[];
-  while (pageNumber <= 5) {
+class FetchCat {
+  int _currentOffset = 0;
+
+  Future<List<Cat>> fetchCat() async {
+    final catCatalogue = <Cat>[];
     final response = await http.get(
       Uri.parse(
-          'https://api.api-ninjas.com/v1/cats?min_weight=1&offset=$pageNumber'),
+          'https://api.api-ninjas.com/v1/cats?min_weight=1&offset=$_currentOffset'),
       headers: {
         'X-Api-Key': 'ZzQZjINuJDLyWUNYiJ1QYQ==hiuvuUGzKSpCkJmY',
       },
@@ -38,9 +40,9 @@ Future<List<Cat>> fetchCat() async {
     } else {
       throw Exception('Failed to fetch data from the API');
     }
-    pageNumber++;
+    _currentOffset += 20;
+    return catCatalogue;
   }
-  return catCatalogue;
 }
 
 
@@ -53,8 +55,6 @@ class CatCatalogue extends StatefulWidget {
 }
 
 class _CatCatalogue extends State<CatCatalogue> {
-  late Future<List<Cat>> _cat;
-
   int _selectedIndex = 0;
   
   void _onItemTapped(int index) {
@@ -75,83 +75,146 @@ class _CatCatalogue extends State<CatCatalogue> {
         break;
       case 2:
         Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const FavPage(),
-            transitionDuration: Duration.zero),
-      );
+          context,
+          PageRouteBuilder(
+              pageBuilder: (context, anim1, anim2) => const FavPage(),
+              transitionDuration: Duration.zero),
+        );
         break;
       default:
     }
   }
-  
+
+  final _fetchCat = FetchCat();
+  final _cat = <Cat>[];
+  bool _isLoading = true;
+  bool _hasMore = true;
+
   @override
   void initState() {
     super.initState();
-    _cat = fetchCat();
+    _isLoading = true;
+    _hasMore = true;
+    _loadMore();
   }
 
-  
+  void _loadMore() {
+    _isLoading = true;
+    _fetchCat.fetchCat().then((List<Cat> fetchedList) {
+      if (fetchedList.isEmpty) {
+        setState(() {
+          _isLoading = false;
+          _hasMore = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _cat.addAll(fetchedList);
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Cat Catalogue'),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem> [
+      appBar: AppBar(
+        title: const Text('Cat Catalogue'),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.cat),
             label: 'Cats',
-            ),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            ),
+          ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.heart),
             label: 'Likes',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-        ),
-        body: FutureBuilder<List<Cat>>(
-          future: _cat,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              final cats = snapshot.data!;
-              return ListView.builder(
-                itemCount: cats.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final cat = cats[index];
-                  return ListTile(
-                    leading: Image.network(cat.imageLink.toString()),
-                    title: Text(cat.name.toString()),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Origin: ${cat.origin}'),
-                      ],
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1,
+              ),
+              itemCount: _hasMore ? _cat.length + 1 : _cat.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (index >= _cat.length) {
+                  if (!_isLoading) {
+                    _loadMore();
+                  }
+                  return const Center(
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(),
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CatDetails(cat: cat),
-                        ),
-                      );
-                    },
                   );
-                },
-              );
-            }
-          },
-        ));
+                }
+                final cat = _cat[index];
+                return Column(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CatDetails(cat: cat),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: 500,
+                          height: 500,
+                          child: Container(
+                            color: const Color.fromRGBO(250, 200, 152, 100),
+                            child: Card(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: FadeInImage.memoryNetwork(
+                                        placeholder: kTransparentImage,
+                                        image: cat.imageLink.toString(),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      cat.name.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
