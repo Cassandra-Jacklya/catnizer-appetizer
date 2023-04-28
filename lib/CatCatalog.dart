@@ -1,13 +1,11 @@
-import 'package:catnizer/main.dart';
+import 'cat_details.dart';
+import '/main.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
-// import 'cat_details.dart';
-import 'dart:io';
-
+import 'cat.dart';
 import 'fav_page.dart';
 
 Future<List<Cat>> fetchCat() async {
@@ -44,32 +42,6 @@ Future<List<Cat>> fetchCat() async {
     pageNumber++;
   }
   return catCatalogue;
-}
-
-class Cat {
-  final String? name;
-  final String? origin;
-  final String? imageLink;
-  final String? length;
-  final num? minWeight;
-  final num? maxWeight;
-  final num? minLifeExpectancy;
-  final num? maxLifeExpectancy;
-  final num? playfulness;
-  final num? familyFriendly;
-  final num? grooming;
-  const Cat(
-      {required this.name,
-      required this.origin,
-      required this.imageLink,
-      required this.length,
-      required this.minWeight,
-      required this.maxWeight,
-      required this.minLifeExpectancy,
-      required this.maxLifeExpectancy,
-      required this.playfulness,
-      required this.familyFriendly,
-      required this.grooming});
 }
 
 class CatCatalogue extends StatefulWidget {
@@ -168,12 +140,12 @@ class _CatCatalogue extends State<CatCatalogue> {
                       ],
                     ),
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => CatDetails(cat: cat),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CatDetails(cat: cat),
+                        ),
+                      );
                     },
                   );
                 },
