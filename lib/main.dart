@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'CATNIZER',
       theme: ThemeData(
         primarySwatch: Colors.orange,
@@ -240,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ],),
           TextButton(
-            onPressed: () async {
+            onPressed: () {
               Navigator.push(context, 
               MaterialPageRoute(builder: (context) => const LoginView()));
             }, 
