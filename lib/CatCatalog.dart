@@ -21,7 +21,6 @@ Future<List<Cat>> fetchCat() async {
     );
     if (response.statusCode == 200) {
       final catCatalogueData = jsonDecode(response.body);
-      print(catCatalogueData);
       for (final cats in catCatalogueData) {
         catCatalogue.add(Cat(
             name: cats['name'],
@@ -53,7 +52,6 @@ class CatCatalogue extends StatefulWidget {
 
 class _CatCatalogue extends State<CatCatalogue> {
   late Future<List<Cat>> _cat;
-
 
   int _selectedIndex = 0;
 
