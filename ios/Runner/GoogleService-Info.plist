@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>355358501463-g0isu8682e9690a87h5c8nkq7g8j0n89.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.355358501463-g0isu8682e9690a87h5c8nkq7g8j0n89</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB-hvcRxZ4YzFlsUGxU2ozvvW7lpovsvpQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>355358501463</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.catnizer</string>
+	<key>PROJECT_ID</key>
+	<string>catnizer-appetizer</string>
+	<key>STORAGE_BUCKET</key>
+	<string>catnizer-appetizer.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:355358501463:ios:d6c9e56fc36c8437bd5112</string>
+</dict>
+</plist>
