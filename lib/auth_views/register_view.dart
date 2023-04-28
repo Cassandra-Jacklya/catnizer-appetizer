@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../firebase_options.dart';
+import 'login_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -70,13 +71,56 @@ class _RegisterViewState extends State<RegisterView> {
                       createUserWithEmailAndPassword(email: email, password: password);
                     } on FirebaseAuthException catch(e) {
                       if (e.code == 'weak-password') {
-                        print("Weak Password");
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Error found'),
+                            content: const Text('Passwords should have a length of more than 6 characters.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          )
+                        );
                       }
                       else if (e.code == "invalid-email") {
-                        print("Invalid email");
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Error found'),
+                            content: const Text('Invalid email.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          )
+                        );
                       }
                       else if (e.code == "email-already-in-use") {
-                        print("Email already in use");
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Error found'),
+                            content: const Text('Email is already registered'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(context, 
+                                    MaterialPageRoute(builder: (context) => const LoginView()));
+                                },
+                                child: const Text("Login"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          )
+                        );
                       }
                     }
                     

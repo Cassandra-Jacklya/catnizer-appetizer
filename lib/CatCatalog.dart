@@ -45,6 +45,8 @@ class FetchCat {
   }
 }
 
+
+
 class CatCatalogue extends StatefulWidget {
   const CatCatalogue({super.key});
 
@@ -54,7 +56,7 @@ class CatCatalogue extends StatefulWidget {
 
 class _CatCatalogue extends State<CatCatalogue> {
   int _selectedIndex = 0;
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
