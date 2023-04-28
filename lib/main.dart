@@ -138,28 +138,61 @@ class _MyHomePageState extends State<MyHomePage> {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(40, 65, 20, 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginView()));
-                        },
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: const BorderSide(
-                                        color: Color.fromRGBO(
-                                            242, 140, 40, 100))))),
-                        child: const Text("SIGN IN"))
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 65, 20, 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              FutureBuilder(
+                      future: Firebase.initializeApp(
+                        options: DefaultFirebaseOptions.currentPlatform,),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.done:
+                          final User? user = FirebaseAuth.instance.currentUser;
+                            if (user == null) {
+                              return TextButton(
+                              onPressed: () async {
+                                Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => const LoginView()));
+                              }, 
+                              style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(18.0),
+                                            side: const BorderSide(
+                                                color: Color.fromRGBO(
+                                                    242, 140, 40, 100))))),
+                              child: const Text("Login"));
+                            }
+                            else {
+                              return ElevatedButton(
+                                onPressed: () {
+                                
+                                }, 
+                                child: Text(user.email!));
+                            }
+                          default:
+                            return ElevatedButton(
+                              onPressed: () async {
+                                Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => const LoginView()));
+                              }, 
+                              style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(18.0),
+                                            side: const BorderSide(
+                                                color: Color.fromRGBO(
+                                                    242, 140, 40, 100))))),
+                              child: const Text("Login"));
+                        }
+                        
+                      }
+                    ),
                   ],
                 ),
               ),
@@ -391,45 +424,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ],
-              )
-            ])));
-            ),
-          ),
-          ],),
-          FutureBuilder(
-            future: Firebase.initializeApp(
-              options: DefaultFirebaseOptions.currentPlatform,),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.done:
-                final User? user = FirebaseAuth.instance.currentUser;
-                  if (user == null) {
-                    return TextButton(
-                    onPressed: () {
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: (context) => const LoginView()));
-                    }, 
-                    child: const Text("Login"));
-                  }
-                  else {
-                    return ElevatedButton(
-                      onPressed: () {
-                       
-                      }, 
-                      child: Text(user.email!));
-                  }
-                default:
-                  return TextButton(
-                    onPressed: () {
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: (context) => const LoginView()));
-                    }, 
-                    child: const Text("Login"));
-              }
-              
-            }
-          )
-        ]));
+              ),
+        ])
+      ),
+    );
   }
 }
 
