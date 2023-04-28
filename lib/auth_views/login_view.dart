@@ -1,5 +1,5 @@
 //Login View
-import 'package:catnizer/auth_views/register_view.dart';
+import 'register_view.dart';
 import 'package:catnizer/componenets/dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -69,19 +69,18 @@ class _LoginViewState extends State<LoginView> {
                     final password = _password.text;
                     try {
                       final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+                      // print(userCredential.user);
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'wrong-password') {
-                        print('Wrong password');
-                      } else if (e.code == 'user-not-found') {
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
                             title: const Text('Error found'),
-                            content: const Text('Wrong Password'),
+                            content: const Text('Wrong Password.'),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () => Navigator.pop(context, 'Cancel'),
-                                child: const Text('Cancel'),
+                                onPressed: () => Navigator.pop(context, 'Forgot Password'), //need to change
+                                child: const Text('Forgot Password'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -90,27 +89,23 @@ class _LoginViewState extends State<LoginView> {
                             ],
                           )
                         );
-                      }
-                      else {
+                      } else {                      
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
                             title: const Text('Error found'),
-                            content: const Text('User not found. Please sign up or recheck your credentials.'),
+                            content: const Text('User not found! Please sign up or check your credentials.'),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () async {
+                                onPressed: () {
                                   Navigator.push(context, 
-                                  MaterialPageRoute(builder: (context) => const RegisterView()));
-                                }, 
-                                child: const Text("Sign Up")),
+                                    MaterialPageRoute(builder: (context) => const RegisterView()));
+                                },
+                                child: const Text("Sign Up"),
+                              ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'Cancel'),
                                 child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
                               ),
                             ],
                           )

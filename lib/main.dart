@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:catnizer/auth_views/login_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -10,7 +11,8 @@ import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'CATNIZER',
       theme: ThemeData(
           primarySwatch: Colors.orange,
@@ -390,6 +393,43 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               )
             ])));
+            ),
+          ),
+          ],),
+          FutureBuilder(
+            future: Firebase.initializeApp(
+              options: DefaultFirebaseOptions.currentPlatform,),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                final User? user = FirebaseAuth.instance.currentUser;
+                  if (user == null) {
+                    return TextButton(
+                    onPressed: () {
+                      Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => const LoginView()));
+                    }, 
+                    child: const Text("Login"));
+                  }
+                  else {
+                    return ElevatedButton(
+                      onPressed: () {
+                       
+                      }, 
+                      child: Text(user.email!));
+                  }
+                default:
+                  return TextButton(
+                    onPressed: () {
+                      Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => const LoginView()));
+                    }, 
+                    child: const Text("Login"));
+              }
+              
+            }
+          )
+        ]));
   }
 }
 
