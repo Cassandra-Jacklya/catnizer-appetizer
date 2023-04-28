@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'CatCatalog.dart';
 import 'fav_page.dart';
 import 'main.dart';
@@ -5,16 +6,7 @@ import 'cat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
-
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
-
-// // ...
-
-// await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-// );
-
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class CatDetails extends StatefulWidget {
   const CatDetails({super.key, required this.cat});
@@ -28,6 +20,7 @@ class CatDetails extends StatefulWidget {
 class _CatDetailsState extends State<CatDetails> {
 
   int _selectedIndex = 1;
+  CollectionReference cats = FirebaseFirestore.instance.collection("cats");
 
   void _onItemTapped(int index) {
     setState(() {
@@ -60,6 +53,36 @@ class _CatDetailsState extends State<CatDetails> {
         break;
       default:
     }
+  }
+
+  Future<void> addFavourite(Cat cat) {
+
+    return cats.add({
+      'name': cat.name,
+      'origin': cat.origin,
+      'imageLink': cat.imageLink,
+      'length': cat.length,
+      'minWeight': cat.minWeight,
+      'maxWeight': cat.maxWeight,
+      'minLifeExpectancy': cat.minLifeExpectancy,
+      'maxLifeExpectancy': cat.maxLifeExpectancy,
+      'playfulness': cat.playfulness,
+      'familyFriendly': cat.familyFriendly,
+      'grooming': cat.grooming,
+    })
+    .then((value) {
+      final snackBar = SnackBar(
+        content: AwesomeSnackbarContent(
+          title: "${cat.name} added to favourites!", 
+          message: "Meow! Couldn't add me to favourites :(", 
+          contentType: ContentType.success));
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 
   @override
@@ -133,7 +156,9 @@ class _CatDetailsState extends State<CatDetails> {
                 children: [
                   const Text("Add to Favourites"),
                   IconButton(
-                    onPressed: () {}, 
+                    onPressed: () {
+                      addFavourite(widget.cat);
+                    },
                     icon: const FaIcon(FontAwesomeIcons.heartCirclePlus)),
                 ],
               ),
