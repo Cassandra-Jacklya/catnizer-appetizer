@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:catnizer/auth_views/login_view.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'CatCatalog.dart';
@@ -10,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
+import 'bloc_state/bloc_main.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,18 +20,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CATNIZER',
-      theme: ThemeData(
-          primarySwatch: Colors.orange,
-          appBarTheme:
-              const AppBarTheme(color: Color.fromARGB(255, 255, 160, 65)),
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            unselectedItemColor: Color.fromARGB(255, 154, 87, 20),
-            selectedItemColor: Color.fromARGB(255, 255, 160, 65),
-          )),
-      home: const MyHomePage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (BuildContext context) {return MainPageBloc();}
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'CATNIZER',
+        theme: ThemeData(
+            primarySwatch: Colors.orange,
+            appBarTheme:
+                const AppBarTheme(color: Color.fromARGB(255, 255, 160, 65)),
+            bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+              unselectedItemColor: Color.fromARGB(255, 154, 87, 20),
+              selectedItemColor: Color.fromARGB(255, 255, 160, 65),
+            )),
+        home: const MyHomePage(),
+      ),
     );
   }
 }
@@ -45,41 +51,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
   final List<String> images = [
     'assets/catimage/1.png',
     'assets/catimage/2.png',
     'assets/catimage/3.png',
     'assets/catimage/7.png',
   ];
-  String _catFact = '';
 
-  Future<String> _getCatFact() async {
-    var response = await http.get(Uri.parse('https://catfact.ninja/fact'));
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-      return jsonResponse['fact'];
-    } else {
-      throw Exception('Failed to load cat fact');
-    }
-  }
-
-  void _updateCatFact() {
-    _getCatFact().then((value) {
-      if (mounted) {
-        setState(() {
-          _catFact = value;
-        });
-      }
-    });
-  }
+  int _selectedIndex = 1;
 
   @override
   void initState() {
+    BlocProvider.of<MainPageBloc>(context).getCatFact();
     super.initState();
-    _updateCatFact();
   }
-
-  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     if (mounted) {
@@ -145,34 +131,47 @@ class _MyHomePageState extends State<MyHomePage> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               FutureBuilder(
-                      future: Firebase.initializeApp(
-                        options: DefaultFirebaseOptions.currentPlatform,),
-                      builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.done:
-                          final User? user = FirebaseAuth.instance.currentUser;
-                            if (user == null) {
-                              return TextButton(
-                              onPressed: () async {
-                                Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => const LoginView()));
-                              }, 
-                              style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
+                                future: Firebase.initializeApp(
+                                  options: DefaultFirebaseOptions.currentPlatform,),
+                                builder: (context, snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.done:
+                                    final User? user = FirebaseAuth.instance.currentUser;
+                                      if (user == null) {
+                                        return TextButton(
+                                        onPressed: () async {
+                                          Navigator.push(context, 
+                                          MaterialPageRoute(builder: (context) => const LoginView()));
+                                        }, 
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(18.0),
-                                            side: const BorderSide(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(18.0),
+                                                side: const BorderSide(
                                                 color: Color.fromRGBO(
                                                     242, 140, 40, 100))))),
                               child: const Text("Login"));
                             }
                             else {
                               return ElevatedButton(
-                                onPressed: () {
+                                // onPressed: () {
                                 
+                                // }, 
+                                // child: Text(user.email!));
+                                onPressed: () async {
+                                  Navigator.push(context, 
+                                  MaterialPageRoute(builder: (context) => const LoginView()));
                                 }, 
-                                child: Text(user.email!));
+                                style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(18.0),
+                                              side: const BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      242, 140, 40, 100))))),
+                                child: const Text("Login"));
                             }
                           default:
                             return ElevatedButton(
@@ -277,14 +276,64 @@ class _MyHomePageState extends State<MyHomePage> {
                   Flexible(
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Text(
-                        _catFact,
-                        style: const TextStyle(
-                          fontSize: 13.0,
-                          fontFamily: 'Raleway',
-                          color: Color.fromARGB(255, 190, 92, 12),
-                          fontWeight: FontWeight.w400,
-                        ),
+                      child: BlocBuilder<MainPageBloc, MainPageEvent>(
+                        builder: (context, state) {
+                          if (state is MainPageLoaded) {
+                            return Column(
+                              children: [
+                                const Text("Fun Fact:",
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontFamily: 'Raleway',
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                Text(
+                                  state.fact,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    fontFamily: 'Raleway',
+                                    color: Color.fromARGB(255, 190, 92, 12),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          else if (state is MainPageInitial) {
+                            return Column(
+                              children: const [
+                                Text("Fun Fact:",
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontFamily: 'Raleway',
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                Text("purring...",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontFamily: 'Raleway',
+                                    color: Color.fromARGB(255, 190, 92, 12),
+                                    fontWeight: FontWeight.w400,
+                                  )
+                                ),
+                              ],
+                            );
+                          }
+                          else {
+                            return const Text("Fun fact not loaded. Are you sure you love cats?",
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                fontFamily: 'Raleway',
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                              )
+                            );
+                          }
+                        }
                       ),
                     ),
                   ),
@@ -430,5 +479,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
