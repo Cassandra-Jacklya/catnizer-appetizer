@@ -7,11 +7,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'CatCatalog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'bloc_state/bloc_register_auth.dart';
 import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
-import 'bloc_state/bloc_auth.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +32,10 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) {return FavouriteBloc();}
         ),
         BlocProvider(
-          create: (BuildContext context) {return AppStateBloc();}
+          create: (BuildContext context) {return LoginStateBloc();}
+        ),
+        BlocProvider(
+          create: (BuildContext context) {return SignUpStateBloc();}
         )
       ],
       child: MaterialApp(

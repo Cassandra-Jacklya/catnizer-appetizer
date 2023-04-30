@@ -66,7 +66,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   //continue here
-                  BlocConsumer<AppStateBloc, AppState>(
+                  BlocConsumer<LoginStateBloc, LoginState>(
                     listener: (context, state) {
                       if (state is AppStateInitial) {}
                         else if (state is AppStateLoggedIn) {
@@ -114,7 +114,7 @@ class _LoginViewState extends State<LoginView> {
                         return TextButton(onPressed: () async {
                           final email = _email.text;
                           final password = _password.text;
-                          BlocProvider.of<AppStateBloc>(context).initFirebase(email, password);
+                          BlocProvider.of<LoginStateBloc>(context).initFirebase(email, password);
                         }, 
                         child: const Text("Login"),
                       );
