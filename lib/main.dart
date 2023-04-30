@@ -165,7 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             else {
                               return ElevatedButton(
                                 onPressed: () {
-                                
+                                  Navigator.push(context, 
+                                  MaterialPageRoute(builder: (context) => const LoginView()));
                                 }, 
                                 child: Text(user.email!));
                             }
