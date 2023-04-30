@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'CatCatalog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,7 +15,8 @@ class FavPage extends StatefulWidget {
 
 class _FavPageState extends State<FavPage> {
 
-  late CollectionReference cat;
+  late FirebaseFirestore firebaseFirestore;
+  late final user;
   int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
@@ -46,7 +48,8 @@ class _FavPageState extends State<FavPage> {
 
   @override
   void initState() {
-    cat = FirebaseFirestore.instance.collection("cats");
+    firebaseFirestore = FirebaseFirestore.instance;
+    user = FirebaseAuth.instance.currentUser;
     super.initState();
   }
 
@@ -75,7 +78,7 @@ class _FavPageState extends State<FavPage> {
           selectedItemColor: const Color.fromARGB(255, 255, 160, 65),
         ),
       body: FutureBuilder<QuerySnapshot>(
-        future: cat.get(),
+        future: firebaseFirestore.collection(user.uid).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
