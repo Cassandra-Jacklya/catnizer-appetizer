@@ -134,12 +134,11 @@ class _FavPageState extends State<FavPage> {
                       ),
                     ),
                   );
-                  // return Text(data[i]['name']);
                 }
               );
             }
           }
-          return const Text("LoadiYesng");
+          return const Text("Loading");
         }
       ),
     );

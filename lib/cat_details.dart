@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'CatCatalog.dart';
 import 'fav_page.dart';
 import 'main.dart';
@@ -19,7 +20,6 @@ class CatDetails extends StatefulWidget {
 class _CatDetailsState extends State<CatDetails> {
 
   int _selectedIndex = 1;
-  CollectionReference cats = FirebaseFirestore.instance.collection("cats");
 
   void _onItemTapped(int index) {
     setState(() {
@@ -54,36 +54,59 @@ class _CatDetailsState extends State<CatDetails> {
     }
   }
 
-  Future<void> addFavourite(Cat cat) {
-    return cats.add({
-      'name': cat.name,
-      'origin': cat.origin,
-      'imageLink': cat.imageLink,
-      'length': cat.length,
-      'minWeight': cat.minWeight,
-      'maxWeight': cat.maxWeight,
-      'minLifeExpectancy': cat.minLifeExpectancy,
-      'maxLifeExpectancy': cat.maxLifeExpectancy,
-      'playfulness': cat.playfulness,
-      'familyFriendly': cat.familyFriendly,
-      'grooming': cat.grooming,
-    })
-    .then((value) {
-      final snackBar = SnackBar(
-        content: AwesomeSnackbarContent(
-          title: "${cat.name} added to favourites!", 
-          message: "Meow! Couldn't add me to favourites :(", 
-          contentType: ContentType.success,
-          color: const Color.fromARGB(255, 154, 87, 20),
-        ),
-      );
+  Future<void> addFavourite(Cat cat) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid; 
+    
 
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
-    }).catchError((onError) {
-      print(onError);
-    });
+    try {
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection(uid!);
+      DocumentSnapshot<Object?> doc = await collectionRef.doc(cat.name).get();
+      bool docExists = doc.exists;
+      return FirebaseFirestore.instance.collection(uid!)
+      .doc(cat.name)
+      .set({
+        'userId': uid,
+        'name': cat.name,
+        'origin': cat.origin,
+        'imageLink': cat.imageLink,
+        'length': cat.length,
+        'minWeight': cat.minWeight,
+        'maxWeight': cat.maxWeight,
+        'minLifeExpectancy': cat.minLifeExpectancy,
+        'maxLifeExpectancy': cat.maxLifeExpectancy,
+        'playfulness': cat.playfulness,
+        'familyFriendly': cat.familyFriendly,
+        'grooming': cat.grooming,
+      })
+      .then((value) {
+        final snackBar = !docExists  
+        ? SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "${cat.name}", 
+            message: "Added to favourites!", 
+            contentType: ContentType.success,
+            color: const Color.fromARGB(255, 154, 87, 20),
+          ),
+        )
+        : SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "${cat.name}", 
+            message: "Already added to favourites!", 
+            contentType: ContentType.success,
+            color: const Color.fromARGB(255, 154, 87, 20),
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }).catchError((onError) {
+        print(onError);
+      });
+    } on FirebaseAuthException catch(e) {
+      print("Something went wrong here");
+    }
   }
 
   @override
