@@ -22,8 +22,7 @@ class CatDetails extends StatefulWidget {
 class _CatDetailsState extends State<CatDetails> {
 
   int _selectedIndex = 1;
-  late bool added;
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -205,41 +204,31 @@ class _CatDetailsState extends State<CatDetails> {
                     return const CircularProgressIndicator();
                   }
                   else if (state is FavouriteTrue) {
-                    added = state.added; 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        added
-                        ? const Text("Remove from favourites")
-                        : const Text("Add to favourites"),
+                        const Text("Remove from favourites"),
                         IconButton(
                           onPressed: () {
                             removeFavourites(widget.cat);
                             BlocProvider.of<FavouriteBloc>(context).alreadyAdded(widget.cat.userId, widget.cat.name);
                           }, 
-                          icon: added
-                          ? const FaIcon(FontAwesomeIcons.heartCircleMinus)
-                          : const FaIcon(FontAwesomeIcons.heartCirclePlus),
+                          icon: const FaIcon(FontAwesomeIcons.heartCircleMinus)
                         ),
                       ],
                     );
                   }
                   else if (state is FavouriteFalse) {
-                    added = state.added;
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        added
-                        ? const Text("Remove from favourites")
-                        : const Text("Add to favourites"),
+                        const Text("Add to favourites"),
                         IconButton(
                           onPressed: () {
                             addFavourite(widget.cat);
                             BlocProvider.of<FavouriteBloc>(context).alreadyAdded(widget.cat.userId, widget.cat.name);
                           }, 
-                          icon: added
-                          ? const FaIcon(FontAwesomeIcons.heartCircleMinus)
-                          : const FaIcon(FontAwesomeIcons.heartCirclePlus),
+                          icon: const FaIcon(FontAwesomeIcons.heartCirclePlus),
                         ),
                       ],
                     );
