@@ -1,4 +1,6 @@
 import 'package:catnizer/auth_views/login_view.dart';
+import 'package:catnizer/bloc_state/bloc_auth.dart';
+import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,8 +11,9 @@ import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
+import 'bloc_state/bloc_auth.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
@@ -25,6 +28,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (BuildContext context) {return MainPageBloc();}
         ),
+        BlocProvider(
+          create: (BuildContext context) {return FavouriteBloc();}
+        ),
+        BlocProvider(
+          create: (BuildContext context) {return AppStateBloc();}
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -155,23 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             }
                             else {
                               return ElevatedButton(
-                                // onPressed: () {
+                                onPressed: () {
                                 
-                                // }, 
-                                // child: Text(user.email!));
-                                onPressed: () async {
-                                  Navigator.push(context, 
-                                  MaterialPageRoute(builder: (context) => const LoginView()));
                                 }, 
-                                style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(18.0),
-                                              side: const BorderSide(
-                                                  color: Color.fromRGBO(
-                                                      242, 140, 40, 100))))),
-                                child: const Text("Login"));
+                                child: Text(user.email!));
                             }
                           default:
                             return ElevatedButton(

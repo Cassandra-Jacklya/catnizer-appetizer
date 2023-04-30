@@ -1,7 +1,8 @@
 //Login View
+import 'package:catnizer/bloc_state/bloc_auth.dart';
+import 'package:catnizer/main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'register_view.dart';
-import 'package:catnizer/componenets/dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../firebase_options.dart';
@@ -64,63 +65,72 @@ class _LoginViewState extends State<LoginView> {
                       hintText: "Enter password",
                     ),
                   ),
-                  TextButton(onPressed: () async {
-                    final email = _email.text;
-                    final password = _password.text;
-                    try {
-                      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-                      // print(userCredential.user);
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'wrong-password') {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Error found'),
-                            content: const Text('Wrong Password.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Forgot Password'), //need to change
-                                child: const Text('Forgot Password'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          )
-                        );
-                      } else {                      
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Error found'),
-                            content: const Text('User not found! Please sign up or check your credentials.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(context, 
-                                    MaterialPageRoute(builder: (context) => const RegisterView()));
-                                },
-                                child: const Text("Sign Up"),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Cancel'),
-                                child: const Text('Cancel'),
-                              ),
-                            ],
-                          )
-                        );
-                      }
+                  //continue here
+                  BlocConsumer<AppStateBloc, AppState>(
+                    listener: (context, state) {
+                      if (state is AppStateInitial) {}
+                        else if (state is AppStateLoggedIn) {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Login Successful!'),
+                                content: Text('You are logged in as ${state.email}'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(context, 
+                                      MaterialPageRoute(builder: (context) => const MyHomePage()));
+                                    },
+                                    child: const Text('Go to home page'),
+                                  ),
+                                ],
+                              )
+                            );
+                        }
+                        else if (state is AppStateError) {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Text(state.error.dialogTitle),
+                                content: Text(state.error.dialogText),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(context, 
+                                        MaterialPageRoute(builder: (context) => const RegisterView()));
+                                    },
+                                    child: const Text("Sign Up"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                                    child: const Text('Cancel'),
+                                  ),
+                                ],
+                              )
+                            );
+                          }
+                      },
+                      builder: (context, state) {
+                        return TextButton(onPressed: () async {
+                          final email = _email.text;
+                          final password = _password.text;
+                          BlocProvider.of<AppStateBloc>(context).initFirebase(email, password);
+                        }, 
+                        child: const Text("Login"),
+                      );
                     }
-                  }, 
-                  child: const Text('Login'),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => const RegisterView()));
+                    },
+                    child: const Text("Not yet registered? Sign up now!"))
                 ],
               );
             default: 
-              return const Text("Loading...");
+              return const CircularProgressIndicator();
           }
-          
         },
       ),
     );

@@ -1,10 +1,8 @@
 import 'package:transparent_image/transparent_image.dart';
-
 import 'CatCatalog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'cat.dart';
 import 'main.dart';
 
 class FavPage extends StatefulWidget {
@@ -16,8 +14,8 @@ class FavPage extends StatefulWidget {
 
 class _FavPageState extends State<FavPage> {
 
-  CollectionReference cat = FirebaseFirestore.instance.collection("cats");
-    int _selectedIndex = 2;
+  late CollectionReference cat;
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -44,6 +42,12 @@ class _FavPageState extends State<FavPage> {
         break;
       default:
     }
+  }
+
+  @override
+  void initState() {
+    cat = FirebaseFirestore.instance.collection("cats");
+    super.initState();
   }
 
   @override
