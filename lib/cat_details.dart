@@ -1,5 +1,7 @@
+import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'CatCatalog.dart';
 import 'fav_page.dart';
 import 'main.dart';
@@ -20,6 +22,7 @@ class CatDetails extends StatefulWidget {
 class _CatDetailsState extends State<CatDetails> {
 
   int _selectedIndex = 1;
+  late bool added;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -57,12 +60,8 @@ class _CatDetailsState extends State<CatDetails> {
   Future<void> addFavourite(Cat cat) async {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid; 
-    
 
     try {
-      CollectionReference collectionRef = FirebaseFirestore.instance.collection(uid!);
-      DocumentSnapshot<Object?> doc = await collectionRef.doc(cat.name).get();
-      bool docExists = doc.exists;
       return FirebaseFirestore.instance.collection(uid!)
       .doc(cat.name)
       .set({
@@ -80,24 +79,14 @@ class _CatDetailsState extends State<CatDetails> {
         'grooming': cat.grooming,
       })
       .then((value) {
-        final snackBar = !docExists  
-        ? SnackBar(
+        final snackBar = SnackBar(
           content: AwesomeSnackbarContent(
             title: "${cat.name}", 
             message: "Added to favourites!", 
             contentType: ContentType.success,
             color: const Color.fromARGB(255, 154, 87, 20),
           ),
-        )
-        : SnackBar(
-          content: AwesomeSnackbarContent(
-            title: "${cat.name}", 
-            message: "Already added to favourites!", 
-            contentType: ContentType.success,
-            color: const Color.fromARGB(255, 154, 87, 20),
-          ),
         );
-
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
@@ -105,8 +94,43 @@ class _CatDetailsState extends State<CatDetails> {
         print(onError);
       });
     } on FirebaseAuthException catch(e) {
-      print("Something went wrong here");
+      //for developers
+      print("Error: ${e.code}");
     }
+  }
+
+  void removeFavourites(Cat cat) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    try {
+
+
+      db.collection(cat.userId!)
+        .doc(cat.name)
+        .delete()
+        .then((value) {
+          final snackBar = SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "${widget.cat.name}", 
+              message: "Removed from favourites!", 
+              contentType: ContentType.success,
+              color: const Color.fromARGB(255, 154, 87, 20),
+            ),
+          );
+
+          ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+        });
+    } on FirebaseException catch(e) {
+      //for developers
+      print("Error: ${e.code}");
+    }
+  }
+
+  @override
+  void initState() {
+    BlocProvider.of<FavouriteBloc>(context).alreadyAdded(widget.cat.userId, widget.cat.name);
+    super.initState();
   }
 
   @override
@@ -168,23 +192,73 @@ class _CatDetailsState extends State<CatDetails> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Bio: "),
+                  const Text("Origin: "),
                   Text(widget.cat.origin ?? ''),
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Add to Favourites"),
-                  IconButton(
-                    onPressed: () {
-                      addFavourite(widget.cat);
-                    },
-                    icon: const FaIcon(FontAwesomeIcons.heartCirclePlus)),
-                ],
+              child: BlocBuilder<FavouriteBloc, FavouriteEvent>(
+                builder: (context, state) {
+                  if (state is FavouriteLoading) {
+                    return const CircularProgressIndicator();
+                  }
+                  else if (state is FavouriteTrue) {
+                    added = state.added; 
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        added
+                        ? const Text("Remove from favourites")
+                        : const Text("Add to favourites"),
+                        IconButton(
+                          onPressed: () {
+                            removeFavourites(widget.cat);
+                            BlocProvider.of<FavouriteBloc>(context).alreadyAdded(widget.cat.userId, widget.cat.name);
+                          }, 
+                          icon: added
+                          ? const FaIcon(FontAwesomeIcons.heartCircleMinus)
+                          : const FaIcon(FontAwesomeIcons.heartCirclePlus),
+                        ),
+                      ],
+                    );
+                  }
+                  else if (state is FavouriteFalse) {
+                    added = state.added;
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        added
+                        ? const Text("Remove from favourites")
+                        : const Text("Add to favourites"),
+                        IconButton(
+                          onPressed: () {
+                            addFavourite(widget.cat);
+                            BlocProvider.of<FavouriteBloc>(context).alreadyAdded(widget.cat.userId, widget.cat.name);
+                          }, 
+                          icon: added
+                          ? const FaIcon(FontAwesomeIcons.heartCircleMinus)
+                          : const FaIcon(FontAwesomeIcons.heartCirclePlus),
+                        ),
+                      ],
+                    );
+                  }
+                  else if (state is FavouriteError) {
+                    return Align(
+                      child: Text("Meow! Can't seem to favourite cats now",
+                        style: TextStyle(fontWeight: FontWeight.w600,
+                          color: Colors.red.shade900,
+                          fontFamily: 'Raleway'
+                        ),
+                      )
+                    );
+                  }
+                  else {
+                    //should never happen
+                    return Container();
+                  }
+                }
               ),
             ),
           ],)

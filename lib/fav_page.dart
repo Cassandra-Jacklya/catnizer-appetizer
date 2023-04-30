@@ -83,7 +83,6 @@ class _FavPageState extends State<FavPage> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
               List<QueryDocumentSnapshot> data = snapshot.data!.docs;
-
               return ListView.builder(
                 itemCount: snapshot.data!.size,
                 itemBuilder: (context, i) {
