@@ -2,8 +2,8 @@ import 'package:catnizer/auth_views/auth_error.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AppStateBloc extends Cubit<AppState> {
-  AppStateBloc() : super(AppStateInitial());
+class LoginStateBloc extends Cubit<LoginState> {
+  LoginStateBloc() : super(AppStateInitial());
 
   void initFirebase(String email, String password) async{
     try {
@@ -13,15 +13,15 @@ class AppStateBloc extends Cubit<AppState> {
       emit(AppStateError(error: authError(e.code)));
     }
   }
-  
+
   AuthError authError(String code) {
     return AuthError.from(code);
   }
 }
 
-abstract class AppState {}
+abstract class LoginState {}
 
-class AppStateLoggedIn extends AppState {
+class AppStateLoggedIn extends LoginState {
 
   AppStateLoggedIn({required this.email, required this.password});
 
@@ -29,18 +29,11 @@ class AppStateLoggedIn extends AppState {
   final String password;
 }
 
-class AppStateLoggedOut extends AppState {}
+class AppStateLoggedOut extends LoginState {}
 
-class AppStateRegisterView extends AppState {
-  AppStateRegisterView({required this.email, required this.password});
+class AppStateInitial extends LoginState {}
 
-  final String email;
-  final String password;
-}
-
-class AppStateInitial extends AppState {}
-
-class AppStateError extends AppState {
+class AppStateError extends LoginState {
   AppStateError({required this.error});
 
   final AuthError error;

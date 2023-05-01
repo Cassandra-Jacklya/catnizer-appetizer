@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
-
 const Map<String, AuthError> authErrorMapping = {
   'user-not-found': AuthErrorUserNotFound(),
   'weak-password': AuthErrorWeakPassword(),

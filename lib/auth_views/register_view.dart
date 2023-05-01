@@ -1,8 +1,8 @@
 //Register View
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:catnizer/bloc_state/bloc_register_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../firebase_options.dart';
 import 'login_view.dart';
 
@@ -63,57 +63,34 @@ class _RegisterViewState extends State<RegisterView> {
                       hintText: "Enter password",
                     ),
                   ),
-                  TextButton(onPressed: () async {
-                    final email = _email.text;
-                    final password = _password.text;
-                    try {
-                      final userCredential = await FirebaseAuth.instance.
-                      createUserWithEmailAndPassword(email: email, password: password);
-                    } on FirebaseAuthException catch(e) {
-                      if (e.code == 'weak-password') {
+                  BlocConsumer<SignUpStateBloc, RegisterState>(
+                    listener: (context, state) {
+                      if (state is RegisterStateInitial) {} 
+                      else if (state is RegisterStateDone) {
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Error found'),
-                            content: const Text('Passwords should have a length of more than 6 characters.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          )
-                        );
-                      }
-                      else if (e.code == "invalid-email") {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Error found'),
-                            content: const Text('Invalid email.'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          )
-                        );
-                      }
-                      else if (e.code == "email-already-in-use") {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Error found'),
-                            content: const Text('Email is already registered'),
+                            title: const Text('Registered!'),
+                            content: Text('You have registered using ${state.email}'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.push(context, 
-                                    MaterialPageRoute(builder: (context) => const LoginView()));
+                                  MaterialPageRoute(builder: (context) => const LoginView()));
                                 },
-                                child: const Text("Login"),
+                                child: const Text('Login'),
                               ),
+                            ],
+                          )
+                        );
+                      }
+                      else if (state is RegisterStateError) {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text(state.error.dialogTitle),
+                            content: Text(state.error.dialogText),
+                            actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
                                 child: const Text('OK'),
@@ -122,17 +99,22 @@ class _RegisterViewState extends State<RegisterView> {
                           )
                         );
                       }
+                    },
+                    builder: (context, state) {
+                      return TextButton(onPressed: () async {
+                        final email = _email.text;
+                        final password = _password.text;
+                        BlocProvider.of<SignUpStateBloc>(context).signUp(email, password);
+                      }, 
+                      child: const Text('Register'),
+                      );
                     }
-                    
-                  }, 
-                  child: const Text('Register'),
                   ),
                 ],
               );
             default: 
               return const Text("Loading...");
           }
-          
         },
       ),
     );
