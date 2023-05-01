@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
@@ -12,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
 import 'bloc_state/bloc_auth.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,17 +63,88 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? _persianDescription;
+  String? _maincoonDescription;
+  String? _ragdollDescription;
+  String? _abyDescription;
+
   final List<String> images = [
-    'assets/catimage/p111.jpg',
+    'assets/catimage/f1.jpg',
     'assets/catimage/p2.jpg',
     'assets/catimage/p3.jpg',
   ];
 
+  // List<dynamic> _articles = [];
+
   int _selectedIndex = 1;
+  Future<void> _fetchCatDescriptions() async {
+    const String persianUrl =
+        'https://api.thecatapi.com/v1/breeds/search?q=persian';
+    const String maincoonUrl =
+        'https://api.thecatapi.com/v1/breeds/search?q=maine%20coon';
+    const String ragdollUrl =
+        'https://api.thecatapi.com/v1/breeds/search?q=ragdoll';
+    const String abyUrl =
+        'https://api.thecatapi.com/v1/breeds/search?q=abyssinian';
+
+    final headers = {'x-api-key': 'kkcIuzUKaGUECSntUaoMzQ==5zBNE0JTrYJIJXMN'};
+
+    try {
+      final persianResponse =
+          await http.get(Uri.parse(persianUrl), headers: headers);
+
+      final persianData = jsonDecode(persianResponse.body);
+
+      setState(() {
+        _persianDescription = persianData[0]['description'];
+      });
+
+      final maincoonResponse =
+          await http.get(Uri.parse(maincoonUrl), headers: headers);
+
+      final maincoonData = jsonDecode(maincoonResponse.body);
+
+      setState(() {
+        _maincoonDescription = maincoonData[0]['description'];
+      });
+
+      final ragdollResponse =
+          await http.get(Uri.parse(ragdollUrl), headers: headers);
+
+      final ragdollData = jsonDecode(ragdollResponse.body);
+
+      setState(() {
+        _ragdollDescription = ragdollData[0]['description'];
+      });
+
+      final abyResponse = await http.get(Uri.parse(abyUrl), headers: headers);
+
+      final abyData = jsonDecode(abyResponse.body);
+
+      setState(() {
+        _abyDescription = abyData[0]['description'];
+      });
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  // Future<void> _fetchNews() async {
+  //   final response = await http.get(
+  //     Uri.parse(
+  //         'https://newsapi.org/v2/everything?q=cat&apiKey=367dfcd1080549d4a7ec7e025e82fa3c'),
+  //   );
+  //   final jsonData = jsonDecode(response.body);
+  //   setState(() {
+  //     _articles = jsonData['articles'];
+  //   });
+  // }
 
   @override
   void initState() {
     BlocProvider.of<MainPageBloc>(context).getCatFact();
+    _fetchCatDescriptions();
+    // _fetchNews();
     super.initState();
   }
 
@@ -108,29 +182,29 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.cat),
-            label: 'Cats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-      body: SingleChildScrollView(
-          child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.cat),
+              label: 'Cats',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.heart),
+              label: 'Likes',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
+        body: SingleChildScrollView(
+            child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 65, 20, 5),
               child: Row(
@@ -210,30 +284,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     'assets/catimage/catlogo.png',
                     height: 35,
                   ),
-                  // Text("CATNIZER",
-                  //     style: TextStyle(
-                  //         fontFamily: 'Raleway',
-                  //         fontWeight: FontWeight.w800,
-                  //         fontSize: 50,
-                  //         color: Color.fromRGBO(242, 140, 40, 100))),
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(40, 0, 20, 10),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     crossAxisAlignment: CrossAxisAlignment.end,
-            //     children: const [
-            //       Text("1 & Only Place Platform for the Cat",
-            //           style: TextStyle(
-            //               fontFamily: 'Raleway',
-            //               fontWeight: FontWeight.w400,
-            //               fontSize: 15,
-            //               color: Color.fromRGBO(110, 56, 2, 0.612)))
-            //     ],
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: CarouselSlider(
@@ -278,11 +331,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }).toList(),
             ),
+
+
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Image.asset('assets/catimage/left1.png',height: 10,),
+                  ),
+                ),
                 Flexible(
+                  flex: 8,
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: BlocBuilder<MainPageBloc, MainPageEvent>(
@@ -290,7 +354,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (state is MainPageLoaded) {
                         return Column(
                           children: [
-                            
                             const Padding(
                               padding: EdgeInsets.only(bottom: 10.0),
                               child: Text("FUN FACT",
@@ -302,9 +365,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   )),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               child: Text(
-                                
                                 state.fact,
                                 style: const TextStyle(
                                   fontSize: 15.0,
@@ -348,9 +410,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     }),
                   ),
                 ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Image.asset('assets/catimage/right1.png',height: 10,),
+                  ),
+                ),
               ],
             ),
             Row(
+              // children:  [
+              //   Padding(
+              //     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+              //     child: Text(
+              //    _persianDescription ??
+              //                   'Loading description...'
+
+              //     ),
+              //   ),
+              // ],
+
               children: const [
                 Padding(
                   padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
@@ -367,159 +447,408 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Row(children: [
               Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Image.asset(
-                            'assets/catimage/persian.jpg',
-                            fit: BoxFit.cover,
-                          ),
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Text(
+                        title: const Text(
                           'PERSIAN',
-                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Raleway',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                              color: Color.fromRGBO(240, 140, 10, 100),
+                              fontFamily: 'Raleway',
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        content: Text(
+                          _persianDescription ?? 'Loading description...',
+                          style: const TextStyle(
+                              color: Color.fromRGBO(141, 81, 2, 0.612),
+                              fontFamily: 'Raleway',
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        actions: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: const Text('OK')),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Image.asset(
+                              'assets/catimage/persian.jpg',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: const Text(
+                            'PERSIAN',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Raleway',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Image.asset(
-                            'assets/catimage/ragdoll.jpg',
-                            fit: BoxFit.cover,
-                          ),
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Text(
+                        title: const Text(
                           'RAGDOLL',
-                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Raleway',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                              color: Color.fromRGBO(240, 140, 10, 100),
+                              fontFamily: 'Raleway',
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        content: Text(
+                          _ragdollDescription ?? 'Loading description...',
+                          style: const TextStyle(
+                              color: Color.fromRGBO(141, 81, 2, 0.612),
+                              fontFamily: 'Raleway',
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        actions: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: const Text('OK')),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Image.asset(
+                              'assets/catimage/ragdoll.jpg',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: const Text(
+                            'RAGDOLL',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Raleway',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ]),
             Row(
               children: [
                 Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Image.asset(
-                            'assets/catimage/maincoon.jpg',
-                            fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text(
+                            'MAINE COON',
+                            style: TextStyle(
+                                color: Color.fromRGBO(240, 140, 10, 100),
+                                fontFamily: 'Raleway',
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          content: Text(
+                            _maincoonDescription ?? 'Loading description...',
+                            style: const TextStyle(
+                                color: Color.fromRGBO(141, 81, 2, 0.612),
+                                fontFamily: 'Raleway',
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: const Text('OK')),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.asset(
+                                'assets/catimage/maincoon.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Text(
-                          'MAINCOON',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Raleway',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                        Positioned(
+                          bottom: 10,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: const Text(
+                              'MAINE COON',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Raleway',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
                 Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Image.asset(
-                            'assets/catimage/aby.jpg',
-                            fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text(
+                            'ABYSSINIAN',
+                            style: TextStyle(
+                                color: Color.fromRGBO(240, 140, 10, 100),
+                                fontFamily: 'Raleway',
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          content: Text(
+                            _abyDescription ?? 'Loading description...',
+                            style: const TextStyle(
+                                color: Color.fromRGBO(141, 81, 2, 0.612),
+                                fontFamily: 'Raleway',
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: const Text('OK')),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.asset(
+                                'assets/catimage/aby.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Text(
-                          'ABYSSINIAN',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Raleway',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                        Positioned(
+                          bottom: 10,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: const Text(
+                              'ABYSSINIAN',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Raleway',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
               ],
             ),
-          ])),
-    );
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CatCatalogue()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        minimumSize: const Size(0, 40),
+                      ),
+                      child: const Text(
+                        'MEOW',
+                        style: TextStyle(
+                            color: Color.fromRGBO(255, 255, 255, 100),
+                            fontFamily: 'Raleway',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            // Row(
+            // children:  [
+            //   Padding(
+            //     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+            //     child: Text(
+            //    _persianDescription ??
+            //                   'Loading description...'
+
+            //     ),
+            //   ),
+            // ],
+
+            //   children: const [
+            //     Padding(
+            //       padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+            //       child: Text(
+            //         "Cat News",
+            //         style: TextStyle(
+            //             fontFamily: 'Raleway',
+            //             fontWeight: FontWeight.w700,
+            //             fontSize: 20,
+            //             color: Color.fromRGBO(240, 140, 10, 100)),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // Row(children: [
+            //   Expanded(
+            //     child: ListView.builder(
+            //       itemCount: _articles.length,
+            //       itemBuilder: (context, index) {
+            //         final article = _articles[index];
+            //         return ListTile(
+            //           title: Text(article['title']),
+            //           subtitle: Text(article['description']),
+            //           leading: Image.network(article['urlToImage']),
+            //           onTap: () {
+            //             // Handle article selection
+            //           },
+            //         );
+            //       },
+            //     ),
+            //   ),
+            //   // add any widget as the last child here
+            //   Container(
+            //     height: 50,
+            //     color: Colors.blue,
+            //     child: const Center(
+            //       child: Text('This is the last row'),
+            //     ),
+            //   ),
+            // ]),
+          ],
+        )));
   }
 }
