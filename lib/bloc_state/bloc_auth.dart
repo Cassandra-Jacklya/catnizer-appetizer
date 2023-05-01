@@ -7,7 +7,7 @@ class LoginStateBloc extends Cubit<LoginState> {
 
   void initFirebase(String email, String password) async{
     try {
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       emit(AppStateLoggedIn(email: email, password: password));
     } on FirebaseAuthException catch (e) {
       emit(AppStateError(error: authError(e.code)));

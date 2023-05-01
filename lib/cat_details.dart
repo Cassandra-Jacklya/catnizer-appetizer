@@ -101,8 +101,6 @@ class _CatDetailsState extends State<CatDetails> {
   void removeFavourites(Cat cat) {
     FirebaseFirestore db = FirebaseFirestore.instance;
     try {
-
-
       db.collection(cat.userId!)
         .doc(cat.name)
         .delete()

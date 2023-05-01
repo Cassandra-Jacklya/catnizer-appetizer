@@ -1,3 +1,4 @@
+import 'package:catnizer/account_page.dart';
 import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
@@ -169,9 +170,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               return ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(context, 
-                                  MaterialPageRoute(builder: (context) => const LoginView()));
+                                  MaterialPageRoute(builder: (context) => const ProfilePage()));
                                 }, 
-                                child: Text(user.email!));
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                        side: const BorderSide(
+                                          color: Color.fromRGBO(242, 140, 40, 100)
+                                        )
+                                      )
+                                    )
+                                  ),
+                                child: const Text('My Account')
+                              );
                             }
                           default:
                             return ElevatedButton(

@@ -13,7 +13,7 @@ class Cat {
   final num? grooming;
   const Cat(
       {required this.userId,
-      this.name,
+      required this.name,
       required this.origin,
       required this.imageLink,
       required this.length,

@@ -7,7 +7,7 @@ class SignUpStateBloc extends Cubit<RegisterState> {
 
   void signUp(String email, String password) async {
     try {
-      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       emit(RegisterStateDone(email: email));
     } on FirebaseAuthException catch (e) {
       emit(RegisterStateError(error: authError(e.code)));

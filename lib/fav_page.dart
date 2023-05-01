@@ -140,7 +140,7 @@ class _FavPageState extends State<FavPage> {
               );
             }
           }
-          return const Text("Loading");
+          return const Center(child: CircularProgressIndicator());
         }
       ),
     );
