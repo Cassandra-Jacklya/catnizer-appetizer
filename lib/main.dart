@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:catnizer/account_page.dart';
 import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
@@ -13,8 +14,8 @@ import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
-import 'bloc_state/bloc_auth.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
