@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:catnizer/account_page.dart';
 import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
@@ -9,6 +8,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'CatCatalog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'bloc_state/bloc_register_auth.dart';
 import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
@@ -28,15 +28,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (BuildContext context) {
-          return MainPageBloc();
-        }),
-        BlocProvider(create: (BuildContext context) {
-          return FavouriteBloc();
-        }),
-        BlocProvider(create: (BuildContext context) {
-          return AppStateBloc();
-        })
+        BlocProvider(
+          create: (BuildContext context) {return MainPageBloc();}
+        ),
+        BlocProvider(
+          create: (BuildContext context) {return FavouriteBloc();}
+        ),
+        BlocProvider(
+          create: (BuildContext context) {return LoginStateBloc();}
+        ),
+        BlocProvider(
+          create: (BuildContext context) {return SignUpStateBloc();}
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -241,14 +244,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: const Text("Login"));
                             } else {
                               return ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginView()));
-                                  },
-                                  child: Text(user.email!));
+                                onPressed: () {
+                                  Navigator.push(context, 
+                                  MaterialPageRoute(builder: (context) => const ProfilePage()));
+                                }, 
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                        side: const BorderSide(
+                                          color: Color.fromRGBO(242, 140, 40, 100)
+                                        )
+                                      )
+                                    )
+                                  ),
+                                child: const Text('My Account')
+                              );
                             }
                           default:
                             return ElevatedButton(

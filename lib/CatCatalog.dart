@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'cat_details.dart';
 import '/main.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class FetchCat {
       final catCatalogueData = jsonDecode(response.body);
       for (final cats in catCatalogueData) {
         catCatalogue.add(Cat(
+            userId: FirebaseAuth.instance.currentUser?.uid,
             name: cats['name'],
             origin: cats['origin'],
             imageLink: cats['image_link'],
