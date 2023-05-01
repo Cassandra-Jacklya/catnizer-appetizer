@@ -1,4 +1,5 @@
 class Cat {
+  final String? userId;
   final String? name;
   final String? origin;
   final String? imageLink;
@@ -11,7 +12,8 @@ class Cat {
   final num? familyFriendly;
   final num? grooming;
   const Cat(
-      {required this.name,
+      {required this.userId,
+      this.name,
       required this.origin,
       required this.imageLink,
       required this.length,

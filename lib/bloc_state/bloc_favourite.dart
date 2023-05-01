@@ -1,28 +1,42 @@
 //bloc class
-//this is unused for now
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
 
 class FavouriteBloc extends Cubit<FavouriteEvent> {
-  FavouriteBloc() : super(FavouriteInitial());
+  FavouriteBloc() : super(FavouriteLoading());
 
-  void loadFavourites() async {
-    
+  void alreadyAdded(String? collection, String? data) async {
+    try {
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection(collection!);
+      DocumentSnapshot<Object?> doc = await collectionRef.doc(data).get();
+      bool docExists = doc.exists;
+      if (docExists) {
+        emit(FavouriteTrue(true));
+      }
+      else {
+        emit(FavouriteFalse(false));
+      }
+    } on FirebaseException catch(e) {
+      emit(FavouriteError());
+    }
   }
-  
 }
 
 //state classes
 abstract class FavouriteEvent {}
 
-class FavouriteInitial extends FavouriteEvent {}
+class FavouriteFalse extends FavouriteEvent {
+  FavouriteFalse(this.added);
 
-class FavouriteLoaded extends FavouriteEvent {
-  FavouriteLoaded(this.fact);
-
-  final String fact;
+  final bool added;
 }
+
+class FavouriteTrue extends FavouriteEvent {
+  FavouriteTrue(this.added);
+
+  final bool added;
+}
+
+class FavouriteLoading extends FavouriteEvent {}
 
 class FavouriteError extends FavouriteEvent {}
