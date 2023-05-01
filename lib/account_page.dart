@@ -1,6 +1,7 @@
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/componenets/top_portion.dart';
 import 'package:catnizer/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,14 +81,33 @@ class _ProfilePageState extends State<ProfilePage> {
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text('Delete Account'),
-                              content: const Text('This action is irreversible! Choose wisely'),
+                              content: const Text('Are you sure you want to delete your account? You cannot undo this operation.'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, 'Cancel'),
                                   child: const Text('Cancel'),
                                 ),
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context, 'Delete'),
+                                  onPressed: () async {
+                                    final user = FirebaseAuth.instance.currentUser;
+                                    final instance = FirebaseFirestore.instance;
+                                    final batch = instance.batch();
+                                    var collection = instance.collection(user!.uid);
+                                    var snapshots = await collection.get();
+                                    for (var doc in snapshots.docs) {
+                                      batch.delete(doc.reference);
+                                    }
+                                    await batch.commit();
+                                    await user.delete();
+                                    
+                                    if (context.mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const MyHomePage()),
+                                      );
+                                    }
+                                  },
                                   child: const Text('Delete'),
                                 ),
                               ],
