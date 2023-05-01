@@ -1,11 +1,20 @@
+import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/componenets/top_portion.dart';
+import 'package:catnizer/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'componenets/list_tile.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,17 +40,62 @@ class ProfilePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FloatingActionButton.extended(
-                        onPressed: () {},
-                        heroTag: 'logout',
+                        onPressed: () {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Logout'),
+                              content: const Text('Are you sure you want to log out?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    await FirebaseAuth.instance.signOut();
+                                    if (context.mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const MyHomePage()),
+                                      );
+                                    }
+                                  },
+                                  child: const Text('Yes'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                         elevation: 0,
+                        heroTag: "logout",
                         label: const Text("Logout"),
                         icon: const Icon(Icons.logout_outlined),
                       ),
                       const SizedBox(width: 16.0),
                       FloatingActionButton.extended(
-                        onPressed: () {},
-                        heroTag: 'delete',
+                        onPressed: () {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Delete Account'),
+                              content: const Text('This action is irreversible! Choose wisely'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'Delete'),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                         elevation: 0,
+                        heroTag: "delete",
                         backgroundColor: Colors.redAccent,
                         label: const Text("Delete"),
                         icon: const Icon(Icons.warning_amber),
