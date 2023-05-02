@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'package:catnizer/account_page.dart';
-import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:catnizer/componenets/button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -129,8 +127,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const FavPage(),
-              transitionDuration: Duration.zero),
+            pageBuilder: (context, anim1, anim2) => const FavPage(),
+            transitionDuration: Duration.zero),
         );
         break;
       default:
@@ -143,19 +141,19 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.cat),
-              label: 'Cats',
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem> [
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.cat),
+            label: 'Cats',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
             ),
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.heart),
-              label: 'Likes',
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.heart),
+            label: 'Likes',
             ),
           ],
           currentIndex: _selectedIndex,
