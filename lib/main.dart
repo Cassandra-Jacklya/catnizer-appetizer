@@ -102,6 +102,12 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _onItemTapped(int index) {
     if (mounted) {
       setState(() {
@@ -131,6 +137,8 @@ class _MyHomePageState extends State<MyHomePage>
       default:
     }
   }
+
+  
 
   int _current = 0;
   @override
