@@ -66,12 +66,10 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String? _persianDescription;
-  String? _maincoonDescription;
-  String? _ragdollDescription;
-  String? _abyDescription;
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
 
+  String catDesc = 'No description found.';
+  late final AnimationController _animationController;
   final List<String> images = [
     'assets/catimage/f1.jpg',
     'assets/catimage/p2.jpg',
@@ -81,57 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
   // List<dynamic> _articles = [];
 
   int _selectedIndex = 1;
-  Future<void> _fetchCatDescriptions() async {
-    const String persianUrl =
-        'https://api.thecatapi.com/v1/breeds/search?q=persian';
-    const String maincoonUrl =
-        'https://api.thecatapi.com/v1/breeds/search?q=maine%20coon';
-    const String ragdollUrl =
-        'https://api.thecatapi.com/v1/breeds/search?q=ragdoll';
-    const String abyUrl =
-        'https://api.thecatapi.com/v1/breeds/search?q=abyssinian';
-
-    final headers = {'x-api-key': 'kkcIuzUKaGUECSntUaoMzQ==5zBNE0JTrYJIJXMN'};
-
-    try {
-      final persianResponse =
-          await http.get(Uri.parse(persianUrl), headers: headers);
-
-      final persianData = jsonDecode(persianResponse.body);
-
-      setState(() {
-        _persianDescription = persianData[0]['description'];
-      });
-
-      final maincoonResponse =
-          await http.get(Uri.parse(maincoonUrl), headers: headers);
-
-      final maincoonData = jsonDecode(maincoonResponse.body);
-
-      setState(() {
-        _maincoonDescription = maincoonData[0]['description'];
-      });
-
-      final ragdollResponse =
-          await http.get(Uri.parse(ragdollUrl), headers: headers);
-
-      final ragdollData = jsonDecode(ragdollResponse.body);
-
-      setState(() {
-        _ragdollDescription = ragdollData[0]['description'];
-      });
-
-      final abyResponse = await http.get(Uri.parse(abyUrl), headers: headers);
-
-      final abyData = jsonDecode(abyResponse.body);
-
-      setState(() {
-        _abyDescription = abyData[0]['description'];
-      });
-    } catch (error) {
-      print(error);
-    }
-  }
 
   // Future<void> _fetchNews() async {
   //   final response = await http.get(
@@ -146,9 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    BlocProvider.of<MainPageBloc>(context).getCatFact();
-    _fetchCatDescriptions();
+    BlocProvider.of<MainPageBloc>(context).getMainStuff();
     // _fetchNews();
+    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationController.repeat(reverse: true);
     super.initState();
   }
 
@@ -216,54 +164,58 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   FutureBuilder(
-                      future: Firebase.initializeApp(
-                        options: DefaultFirebaseOptions.currentPlatform,
-                      ),
-                      builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.done:
-                            final User? user =
-                                FirebaseAuth.instance.currentUser;
-                            if (user == null) {
-                              return TextButton(
-                                  onPressed: () async {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginView()));
-                                  },
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                              side: const BorderSide(
-                                                  color: Color.fromRGBO(
-                                                      242, 140, 40, 100))))),
-                                  child: const Text("Login"));
-                            } else {
-                              return ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(context, 
-                                  MaterialPageRoute(builder: (context) => const ProfilePage()));
-                                }, 
+                    future: Firebase.initializeApp(
+                      options: DefaultFirebaseOptions.currentPlatform,
+                    ),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          final User? user =
+                              FirebaseAuth.instance.currentUser;
+                          if (user == null) {
+                            return FadeTransition(
+                              opacity: _animationController,
+                              child: TextButton(
+                                onPressed: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginView()));
+                                },
                                 style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                        side: const BorderSide(
-                                          color: Color.fromRGBO(242, 140, 40, 100)
-                                        )
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: const BorderSide(
+                                              color: Color.fromRGBO(
+                                                  242, 140, 40, 100))))),
+                                child: const Text("Login")),
+                            );
+                          } else {
+                            return ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => const ProfilePage()));
+                              }, 
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                      side: const BorderSide(
+                                        color: Color.fromRGBO(242, 140, 40, 100)
                                       )
                                     )
-                                  ),
-                                child: const Text('My Account')
-                              );
-                            }
-                          default:
-                            return ElevatedButton(
+                                  )
+                                ),
+                              child: const Text('My Account')
+                            );
+                          }
+                        default:
+                          return FadeTransition(
+                            opacity: _animationController,
+                            child: ElevatedButton(
                                 onPressed: () async {
                                   Navigator.push(
                                       context,
@@ -280,9 +232,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                             side: const BorderSide(
                                                 color: Color.fromRGBO(
                                                     242, 140, 40, 100))))),
-                                child: const Text("Login"));
-                        }
-                      }),
+                                child: const Text("Login")),
+                          );
+                      }
+                    }
+                  ),
                 ],
               ),
             ),
@@ -429,17 +383,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Row(
-              // children:  [
-              //   Padding(
-              //     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-              //     child: Text(
-              //    _persianDescription ??
-              //                   'Loading description...'
-
-              //     ),
-              //   ),
-              // ],
-
               children: const [
                 Padding(
                   padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
@@ -454,324 +397,637 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            Row(children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        title: const Text(
-                          'PERSIAN',
-                          style: TextStyle(
-                              color: Color.fromRGBO(240, 140, 10, 100),
-                              fontFamily: 'Raleway',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w800),
-                        ),
-                        content: Text(
-                          _persianDescription ?? 'Loading description...',
-                          style: const TextStyle(
-                              color: Color.fromRGBO(141, 81, 2, 0.612),
-                              fontFamily: 'Raleway',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
+            BlocBuilder<MainPageBloc, MainPageEvent>(
+              builder: (context, state) {
+                if (state is MainPageLoaded) {
+                  return Column(
+                    children: [
+                      Row(children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text(
+                                      'PERSIAN',
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(240, 140, 10, 100),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    content: Text(
+                                      state.persian,
+                                      style: const TextStyle(
+                                          color: Color.fromRGBO(141, 81, 2, 0.612),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    actions: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: ElevatedButton(
+                                            onPressed: () => Navigator.pop(context, 'OK'),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            child: const Text('OK')),
+                                      ),
+                                    ],
+                                  )
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/persian.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                child: const Text('OK')),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'PERSIAN',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text(
+                                      'RAGDOLL',
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(240, 140, 10, 100),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    content: Text(
+                                      state.ragdoll,
+                                      style: const TextStyle(
+                                          color: Color.fromRGBO(141, 81, 2, 0.612),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    actions: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: ElevatedButton(
+                                            onPressed: () => Navigator.pop(context, 'OK'),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            child: const Text('OK')),
+                                      ),
+                                    ],
+                                  )
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/ragdoll.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'RAGDOLL',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text(
+                                        'MAINE COON',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(240, 140, 10, 100),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      content: Text(
+                                        state.maincoon,
+                                        style: const TextStyle(
+                                            color: Color.fromRGBO(141, 81, 2, 0.612),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      actions: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10),
+                                          child: ElevatedButton(
+                                              onPressed: () => Navigator.pop(context, 'OK'),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                ),
+                                              ),
+                                              child: const Text('OK')),
+                                        ),
+                                      ],
+                                    )
+                                  );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/maincoon.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'MAINE COON',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text(
+                                        'ABYSSINIAN',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(240, 140, 10, 100),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      content: Text(
+                                        state.aby,
+                                        style: const TextStyle(
+                                            color: Color.fromRGBO(141, 81, 2, 0.612),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      actions: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10),
+                                          child: ElevatedButton(
+                                              onPressed: () => Navigator.pop(context, 'OK'),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                ),
+                                              ),
+                                              child: const Text('OK')),
+                                        ),
+                                      ],
+                                    )
+                                  );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/aby.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'ABYSSINIAN',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    );
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Image.asset(
-                              'assets/catimage/persian.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: const Text(
-                            'PERSIAN',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Raleway',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        title: const Text(
-                          'RAGDOLL',
-                          style: TextStyle(
-                              color: Color.fromRGBO(240, 140, 10, 100),
-                              fontFamily: 'Raleway',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w800),
-                        ),
-                        content: Text(
-                          _ragdollDescription ?? 'Loading description...',
-                          style: const TextStyle(
-                              color: Color.fromRGBO(141, 81, 2, 0.612),
-                              fontFamily: 'Raleway',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                  );
+                } 
+                else {
+                  return Column(
+                    children: [
+                      Row(children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text(
+                                      'PERSIAN',
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(240, 140, 10, 100),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    content: Text(
+                                      catDesc,
+                                      style: const TextStyle(
+                                          color: Color.fromRGBO(141, 81, 2, 0.612),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    actions: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: ElevatedButton(
+                                            onPressed: () => Navigator.pop(context, 'OK'),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            child: const Text('OK')),
+                                      ),
+                                    ],
+                                  )
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/persian.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                child: const Text('OK')),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'PERSIAN',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text(
+                                      'RAGDOLL',
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(240, 140, 10, 100),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    content: Text(
+                                      catDesc,
+                                      style: const TextStyle(
+                                          color: Color.fromRGBO(141, 81, 2, 0.612),
+                                          fontFamily: 'Raleway',
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    actions: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: ElevatedButton(
+                                            onPressed: () => Navigator.pop(context, 'OK'),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            child: const Text('OK')),
+                                      ),
+                                    ],
+                                  )
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/ragdoll.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'RAGDOLL',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text(
+                                        'MAINE COON',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(240, 140, 10, 100),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      content: Text(
+                                        catDesc,
+                                        style: const TextStyle(
+                                            color: Color.fromRGBO(141, 81, 2, 0.612),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      actions: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10),
+                                          child: ElevatedButton(
+                                              onPressed: () => Navigator.pop(context, 'OK'),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                ),
+                                              ),
+                                              child: const Text('OK')),
+                                        ),
+                                      ],
+                                    )
+                                  );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/maincoon.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'MAINE COON',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text(
+                                        'ABYSSINIANs',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(240, 140, 10, 100),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      content: Text(
+                                        catDesc,
+                                        style: const TextStyle(
+                                            color: Color.fromRGBO(141, 81, 2, 0.612),
+                                            fontFamily: 'Raleway',
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      actions: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10),
+                                          child: ElevatedButton(
+                                              onPressed: () => Navigator.pop(context, 'OK'),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                ),
+                                              ),
+                                              child: const Text('OK')),
+                                        ),
+                                      ],
+                                    )
+                                  );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/aby.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: const Text(
+                                        'ABYSSINIAN',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Raleway',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    );
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Image.asset(
-                              'assets/catimage/ragdoll.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: const Text(
-                            'RAGDOLL',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Raleway',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
-                  ),
-                ),
-              ),
-            ]),
-            Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          title: const Text(
-                            'MAINE COON',
-                            style: TextStyle(
-                                color: Color.fromRGBO(240, 140, 10, 100),
-                                fontFamily: 'Raleway',
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          content: Text(
-                            _maincoonDescription ?? 'Loading description...',
-                            style: const TextStyle(
-                                color: Color.fromRGBO(141, 81, 2, 0.612),
-                                fontFamily: 'Raleway',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: ElevatedButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Text('OK')),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Stack(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Image.asset(
-                                'assets/catimage/maincoon.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 10,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: const Text(
-                              'MAINE COON',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Raleway',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          title: const Text(
-                            'ABYSSINIAN',
-                            style: TextStyle(
-                                color: Color.fromRGBO(240, 140, 10, 100),
-                                fontFamily: 'Raleway',
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          content: Text(
-                            _abyDescription ?? 'Loading description...',
-                            style: const TextStyle(
-                                color: Color.fromRGBO(141, 81, 2, 0.612),
-                                fontFamily: 'Raleway',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: ElevatedButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Text('OK')),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Stack(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Image.asset(
-                                'assets/catimage/aby.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 10,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: const Text(
-                              'ABYSSINIAN',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Raleway',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                  );
+                }
+              }
+                
+            ), 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
