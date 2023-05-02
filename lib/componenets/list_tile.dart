@@ -14,7 +14,8 @@ class CustomListTile extends StatelessWidget {
     return SizedBox(
       width: 300,
       child: ListTile(
-        title: Text(title),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        title: Text(title,),
         leading: icon,
         trailing: const Icon(Icons.arrow_forward_ios_outlined),
         onTap: () {

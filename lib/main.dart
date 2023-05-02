@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'package:catnizer/account_page.dart';
-import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:catnizer/customShape.dart';
+import 'package:catnizer/componenets/button.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,8 +13,6 @@ import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
 import 'package:transparent_image/transparent_image.dart';
 
 void main() {
@@ -82,27 +78,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     'assets/catimage/p3.jpg',
   ];
 
-  // List<dynamic> _articles = [];
-
   int _selectedIndex = 1;
-
-  // Future<void> _fetchNews() async {
-  //   final response = await http.get(
-  //     Uri.parse(
-  //         'https://newsapi.org/v2/everything?q=cat&apiKey=367dfcd1080549d4a7ec7e025e82fa3c'),
-  //   );
-  //   final jsonData = jsonDecode(response.body);
-  //   setState(() {
-  //     _articles = jsonData['articles'];
-  //   });
-  // }
 
   @override
   void initState() {
     BlocProvider.of<MainPageBloc>(context).getMainStuff();
-    // _fetchNews();
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animationController.repeat(reverse: true);
 
     super.initState();
@@ -118,6 +99,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
+    _controller.dispose();
+    _animation.dispose();
     super.dispose();
   }
 
@@ -143,8 +126,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const FavPage(),
-              transitionDuration: Duration.zero),
+            pageBuilder: (context, anim1, anim2) => const FavPage(),
+            transitionDuration: Duration.zero),
         );
         break;
       default:
@@ -167,13 +150,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               icon: FaIcon(FontAwesomeIcons.cat),
               label: 'Cats',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
             ),
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.heart),
-              label: 'Likes',
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.heart),
+            label: 'Likes',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -181,7 +164,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
         body: SingleChildScrollView(
             child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
@@ -244,27 +226,32 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           default:
                             return FadeTransition(
                               opacity: _animationController,
-                              child: ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginView()));
-                                  },
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                              side: const BorderSide(
-                                                  color: Color.fromRGBO(
-                                                      242, 140, 40, 100))))),
-                                  child: const Text("Login")),
+                              child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
                             );
-                        }
-                      }),
+                          } else {
+                            return const CustomButton(buttonName: "My Account", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Color.fromRGBO(242, 140, 40, 100));
+                          }
+                        default:
+                          return FadeTransition(
+                            opacity: _animationController,
+                            child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
+                          );
+                      }
+                    }
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/catimage/catlogo.png',
+                    height: 35,
+                  ),
                 ],
               ),
             ),
@@ -1180,58 +1167,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 )
               ],
             ),
-            // Row(
-            // children:  [
-            //   Padding(
-            //     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-            //     child: Text(
-            //    _persianDescription ??
-            //                   'Loading description...'
-
-            //     ),
-            //   ),
-            // ],
-
-            //   children: const [
-            //     Padding(
-            //       padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-            //       child: Text(
-            //         "Cat News",
-            //         style: TextStyle(
-            //             fontFamily: 'Raleway',
-            //             fontWeight: FontWeight.w700,
-            //             fontSize: 20,
-            //             color: Color.fromRGBO(240, 140, 10, 100)),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // Row(children: [
-            //   Expanded(
-            //     child: ListView.builder(
-            //       itemCount: _articles.length,
-            //       itemBuilder: (context, index) {
-            //         final article = _articles[index];
-            //         return ListTile(
-            //           title: Text(article['title']),
-            //           subtitle: Text(article['description']),
-            //           leading: Image.network(article['urlToImage']),
-            //           onTap: () {
-            //             // Handle article selection
-            //           },
-            //         );
-            //       },
-            //     ),
-            //   ),
-            //   // add any widget as the last child here
-            //   Container(
-            //     height: 50,
-            //     color: Colors.blue,
-            //     child: const Center(
-            //       child: Text('This is the last row'),
-            //     ),
-            //   ),
-            // ]),
           ],
         )));
   }
