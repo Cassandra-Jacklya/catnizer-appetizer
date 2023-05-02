@@ -343,9 +343,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }).toList(),
             ),
-
-
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
