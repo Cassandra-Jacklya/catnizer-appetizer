@@ -53,7 +53,7 @@ class _FavPageState extends State<FavPage> {
   void initState() {
     firebaseFirestore = FirebaseFirestore.instance;
     user = FirebaseAuth.instance.currentUser;
-    BlocProvider.of<FavouriteBloc>(context).alreadyAdded(user?.uid ?? ' ', user?.email ?? ' ');
+    BlocProvider.of<FavouriteBloc>(context).alreadyAdded(user?.uid ?? ' ', ' ');
     super.initState();
   }
 
@@ -116,25 +116,89 @@ class _FavPageState extends State<FavPage> {
                                   Flexible(
                                     child: Padding(
                                       padding: const EdgeInsets.fromLTRB(10.0, 0.0, 2.0, 0.0),
-                                      child: Expanded(
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(data[i]['name'],
-                                                    style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontFamily: 'Raleway',
-                                                      fontWeight: FontWeight.w500
-                                                    ),
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(data[i]['name'],
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.w500
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
+                                      )
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    );
+                  }
+                }
+                return const Center(child: CircularProgressIndicator());
+              }
+            );
+          }
+          else if (state is FavouriteFalse && user != null) {
+            return FutureBuilder<QuerySnapshot>(
+              future: firebaseFirestore.collection(user.uid).get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    List<QueryDocumentSnapshot> data = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount: snapshot.data!.size,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+                          child: Card(
+                            color: Colors.blueGrey[200],
+                            elevation: 10.0,
+                            surfaceTintColor: Colors.amber[200],
+                            clipBehavior: Clip.antiAlias,
+                            child: SizedBox(
+                              height: 100,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  AspectRatio(
+                                    aspectRatio: 1.4,
+                                    child: FadeInImage.memoryNetwork(
+                                            placeholder: kTransparentImage,
+                                            image: data[i]['imageLink'].toString(),
+                                            fit: BoxFit.cover,
+                                          ),
+                                  ),
+                                  Flexible(
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 2.0, 0.0),
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(data[i]['name'],
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.w500
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       )
                                       ),
                                     ),
