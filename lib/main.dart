@@ -3,6 +3,7 @@ import 'package:catnizer/account_page.dart';
 import 'package:catnizer/auth_views/login_view.dart';
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
+import 'package:catnizer/customShape.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -25,6 +26,9 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  @override
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +71,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   String catDesc = 'No description found.';
   late final AnimationController _animationController;
+  late final Animation<double> _animation;
+  late final AnimationController _controller;
   final List<String> images = [
     'assets/catimage/f1.jpg',
     'assets/catimage/p2.jpg',
@@ -99,7 +104,15 @@ class _MyHomePageState extends State<MyHomePage>
     _animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animationController.repeat(reverse: true);
+
     super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+    _controller.forward();
   }
 
   @override
@@ -138,12 +151,16 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  
-
   int _current = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Image.asset("assets/catimage/catlogowhite.png", height: 30,),
+          toolbarHeight: 90,
+         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70), bottomRight: Radius.circular(70))),
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -168,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(40, 65, 20, 5),
+              padding: const EdgeInsets.fromLTRB(40, 10, 20, 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -248,19 +265,6 @@ class _MyHomePageState extends State<MyHomePage>
                             );
                         }
                       }),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/catimage/catlogo.png',
-                    height: 35,
-                  ),
                 ],
               ),
             ),
@@ -466,16 +470,19 @@ class _MyHomePageState extends State<MyHomePage>
                           },
                           child: Stack(
                             children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Image.asset(
-                                      'assets/catimage/persian.jpg',
-                                      fit: BoxFit.cover,
+                              FadeTransition(
+                                opacity: _animation,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Image.asset(
+                                        'assets/catimage/persian.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -550,16 +557,19 @@ class _MyHomePageState extends State<MyHomePage>
                           },
                           child: Stack(
                             children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Image.asset(
-                                      'assets/catimage/ragdoll.jpg',
-                                      fit: BoxFit.cover,
+                              FadeTransition(
+                                opacity: _animation,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Image.asset(
+                                        'assets/catimage/ragdoll.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -639,16 +649,19 @@ class _MyHomePageState extends State<MyHomePage>
                             },
                             child: Stack(
                               children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Image.asset(
-                                        'assets/catimage/maincoon.jpg',
-                                        fit: BoxFit.cover,
+                                FadeTransition(
+                                  opacity: _animation,
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/maincoon.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -725,16 +738,19 @@ class _MyHomePageState extends State<MyHomePage>
                             },
                             child: Stack(
                               children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Image.asset(
-                                        'assets/catimage/aby.jpg',
-                                        fit: BoxFit.cover,
+                                FadeTransition(
+                                  opacity: _animation,
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/aby.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -817,16 +833,19 @@ class _MyHomePageState extends State<MyHomePage>
                           },
                           child: Stack(
                             children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Image.asset(
-                                      'assets/catimage/persian.jpg',
-                                      fit: BoxFit.cover,
+                              FadeTransition(
+                                opacity: _animation,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Image.asset(
+                                        'assets/catimage/persian.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -901,16 +920,19 @@ class _MyHomePageState extends State<MyHomePage>
                           },
                           child: Stack(
                             children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Image.asset(
-                                      'assets/catimage/ragdoll.jpg',
-                                      fit: BoxFit.cover,
+                              FadeTransition(
+                                opacity: _animation,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Image.asset(
+                                        'assets/catimage/ragdoll.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -990,16 +1012,19 @@ class _MyHomePageState extends State<MyHomePage>
                             },
                             child: Stack(
                               children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Image.asset(
-                                        'assets/catimage/maincoon.jpg',
-                                        fit: BoxFit.cover,
+                                FadeTransition(
+                                  opacity: _animation,
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/maincoon.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1076,16 +1101,19 @@ class _MyHomePageState extends State<MyHomePage>
                             },
                             child: Stack(
                               children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Image.asset(
-                                        'assets/catimage/aby.jpg',
-                                        fit: BoxFit.cover,
+                                FadeTransition(
+                                  opacity: _animation,
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 10, 10, 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/catimage/aby.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
