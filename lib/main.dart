@@ -1,7 +1,6 @@
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:catnizer/componenets/button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -13,8 +12,6 @@ import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,25 +72,11 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     'assets/catimage/p3.jpg',
   ];
 
-  // List<dynamic> _articles = [];
-
   int _selectedIndex = 1;
-
-  // Future<void> _fetchNews() async {
-  //   final response = await http.get(
-  //     Uri.parse(
-  //         'https://newsapi.org/v2/everything?q=cat&apiKey=367dfcd1080549d4a7ec7e025e82fa3c'),
-  //   );
-  //   final jsonData = jsonDecode(response.body);
-  //   setState(() {
-  //     _articles = jsonData['articles'];
-  //   });
-  // }
 
   @override
   void initState() {
     BlocProvider.of<MainPageBloc>(context).getMainStuff();
-    // _fetchNews();
     _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animationController.repeat(reverse: true);
     super.initState();
@@ -161,7 +144,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         ),
         body: SingleChildScrollView(
             child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
@@ -1019,58 +1001,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 )
               ],
             ),
-            // Row(
-            // children:  [
-            //   Padding(
-            //     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-            //     child: Text(
-            //    _persianDescription ??
-            //                   'Loading description...'
-
-            //     ),
-            //   ),
-            // ],
-
-            //   children: const [
-            //     Padding(
-            //       padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-            //       child: Text(
-            //         "Cat News",
-            //         style: TextStyle(
-            //             fontFamily: 'Raleway',
-            //             fontWeight: FontWeight.w700,
-            //             fontSize: 20,
-            //             color: Color.fromRGBO(240, 140, 10, 100)),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // Row(children: [
-            //   Expanded(
-            //     child: ListView.builder(
-            //       itemCount: _articles.length,
-            //       itemBuilder: (context, index) {
-            //         final article = _articles[index];
-            //         return ListTile(
-            //           title: Text(article['title']),
-            //           subtitle: Text(article['description']),
-            //           leading: Image.network(article['urlToImage']),
-            //           onTap: () {
-            //             // Handle article selection
-            //           },
-            //         );
-            //       },
-            //     ),
-            //   ),
-            //   // add any widget as the last child here
-            //   Container(
-            //     height: 50,
-            //     color: Colors.blue,
-            //     child: const Center(
-            //       child: Text('This is the last row'),
-            //     ),
-            //   ),
-            // ]),
           ],
         )));
   }

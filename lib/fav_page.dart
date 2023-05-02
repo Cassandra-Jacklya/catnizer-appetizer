@@ -1,4 +1,6 @@
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
+import 'package:catnizer/cat.dart';
+import 'package:catnizer/cat_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -104,14 +106,14 @@ class _FavPageState extends State<FavPage> {
                               height: 100,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
+                                children: [
                                   AspectRatio(
                                     aspectRatio: 1.4,
                                     child: FadeInImage.memoryNetwork(
-                                            placeholder: kTransparentImage,
-                                            image: data[i]['imageLink'].toString(),
-                                            fit: BoxFit.cover,
-                                          ),
+                                      placeholder: kTransparentImage,
+                                      image: data[i]['imageLink'].toString(),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   Flexible(
                                     child: Padding(
