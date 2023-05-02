@@ -97,49 +97,46 @@ class _FavPageState extends State<FavPage> {
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-                          child: Card(
-                            color: Colors.blueGrey[200],
-                            elevation: 10.0,
-                            surfaceTintColor: Colors.amber[200],
-                            clipBehavior: Clip.antiAlias,
-                            child: SizedBox(
-                              height: 100,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: 1.4,
-                                    child: FadeInImage.memoryNetwork(
-                                      placeholder: kTransparentImage,
-                                      image: data[i]['imageLink'].toString(),
-                                      fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => CatDetails(cat: Cat(
+                                userId: data[i]['userId'].toString(), 
+                                name: data[i]['name'].toString(), 
+                                origin: data[i]['origin'].toString(), 
+                                imageLink: data[i]['imageLink'].toString(), 
+                                length: data[i]['length'].toString(), 
+                                minWeight: data[i]['minWeight'], 
+                                maxWeight: data[i]['maxWeight'], 
+                                minLifeExpectancy: data[i]['minLifeExpectancy'], 
+                                maxLifeExpectancy: data[i]['maxLifeExpectancy'], 
+                                playfulness: data[i]['playfulness'], 
+                                familyFriendly: data[i]['familyFriendly'], 
+                                grooming: data[i]['grooming']) )));
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [AspectRatio(
+                                aspectRatio: 1.4,
+                                child: FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: data[i]['imageLink'].toString(),
+                                  fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  child: Text(
+                                    data[i]['name'].toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontFamily: 'Raleway',
+                                      fontSize: 24
                                     ),
                                   ),
-                                  Flexible(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 2.0, 0.0),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(data[i]['name'],
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: 'Raleway',
-                                                    fontWeight: FontWeight.w500
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                      ),
-                                    ),
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           ),
                         );
@@ -163,49 +160,46 @@ class _FavPageState extends State<FavPage> {
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-                          child: Card(
-                            color: Colors.blueGrey[200],
-                            elevation: 10.0,
-                            surfaceTintColor: Colors.amber[200],
-                            clipBehavior: Clip.antiAlias,
-                            child: SizedBox(
-                              height: 100,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  AspectRatio(
-                                    aspectRatio: 1.4,
-                                    child: FadeInImage.memoryNetwork(
-                                            placeholder: kTransparentImage,
-                                            image: data[i]['imageLink'].toString(),
-                                            fit: BoxFit.cover,
-                                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => CatDetails(cat: Cat(
+                                userId: data[i]['userId'].toString(), 
+                                name: data[i]['name'].toString(), 
+                                origin: data[i]['origin'].toString(), 
+                                imageLink: data[i]['imageLink'].toString(), 
+                                length: data[i]['length'].toString(), 
+                                minWeight: data[i]['minWeight'], 
+                                maxWeight: data[i]['maxWeight'], 
+                                minLifeExpectancy: data[i]['minLifeExpectancy'], 
+                                maxLifeExpectancy: data[i]['maxLifeExpectancy'], 
+                                playfulness: data[i]['playfulness'], 
+                                familyFriendly: data[i]['familyFriendly'], 
+                                grooming: data[i]['grooming']) )));
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [AspectRatio(
+                                aspectRatio: 1.4,
+                                child: FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: data[i]['imageLink'].toString(),
+                                  fit: BoxFit.cover,
                                   ),
-                                  Flexible(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 2.0, 0.0),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(data[i]['name'],
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: 'Raleway',
-                                                    fontWeight: FontWeight.w500
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                      ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  child: Text(
+                                    data[i]['name'].toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontFamily: 'Raleway',
+                                      fontSize: 24
                                     ),
-                                ],
-                              ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         );
