@@ -7,7 +7,7 @@ class FavouriteBloc extends Cubit<FavouriteEvent> {
 
   void alreadyAdded(String? collection, String? data) async {
     try {
-      CollectionReference collectionRef = FirebaseFirestore.instance.collection(collection ?? '');
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection(collection ?? ' ');
       DocumentSnapshot<Object?> doc = await collectionRef.doc(data).get();
       bool docExists = doc.exists;
       if (docExists) {
