@@ -232,14 +232,24 @@ class _CatDetailsState extends State<CatDetails> {
                     );
                   }
                   else if (state is FavouriteError) {
-                    return Align(
-                      child: Text("Meow! Can't seem to favourite cats now",
-                        style: TextStyle(fontWeight: FontWeight.w600,
-                          color: Colors.red.shade900,
-                          fontFamily: 'Raleway'
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Meow! Can't seem to favourite cats now"),
+                        IconButton(
+                          onPressed: () {}, 
+                          icon: const FaIcon(FontAwesomeIcons.triangleExclamation),
                         ),
-                      )
+                      ],
                     );
+                    // return Align(
+                    //   child: Text("Meow! Can't seem to favourite cats now",
+                    //     style: TextStyle(fontWeight: FontWeight.w600,
+                    //       color: Colors.red.shade900,
+                    //       fontFamily: 'Raleway'
+                    //     ),
+                    //   )
+                    // );
                   }
                   else {
                     //should never happen

@@ -188,6 +188,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: FadeInImage.memoryNetwork(
+                                        fadeInDuration: const Duration(milliseconds: 300),
                                         placeholder: kTransparentImage,
                                         image: cat.imageLink.toString(),
                                         fit: BoxFit.cover,
