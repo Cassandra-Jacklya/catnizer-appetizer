@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'cat.dart';
 import 'fav_page.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:bloc/bloc.dart';
 
 class FetchCat {
   int _currentOffset = 0;
@@ -45,8 +46,6 @@ class FetchCat {
   }
 }
 
-
-
 class CatCatalogue extends StatefulWidget {
   const CatCatalogue({super.key});
 
@@ -56,7 +55,7 @@ class CatCatalogue extends StatefulWidget {
 
 class _CatCatalogue extends State<CatCatalogue> {
   int _selectedIndex = 0;
-  
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
