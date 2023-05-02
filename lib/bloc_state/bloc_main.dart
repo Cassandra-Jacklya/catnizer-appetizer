@@ -18,30 +18,30 @@ class MainPageBloc extends Cubit<MainPageEvent> {
         'https://api.thecatapi.com/v1/breeds/search?q=ragdoll';
     const String abyUrl =
         'https://api.thecatapi.com/v1/breeds/search?q=abyssinian';
-
-    // final headers = {'x-api-key': 'kkcIuzUKaGUECSntUaoMzQ==5zBNE0JTrYJIJXMN'};
+        
+    final headers = {'x-api-key': 'live_PIIQWS3doyRZjU7nu9lmcyUq4PpSQNFMFZ6kg7Q2Ofi1MhxsUs48TvyoubQI6SWk'};
 
     try {
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-        //persian
-        final persianResponse = await http.get(Uri.parse(persianUrl));
+        //persian  
+        final persianResponse = await http.get(Uri.parse(persianUrl), headers: headers);
         final persianData = jsonDecode(persianResponse.body);
         String persianDescription = persianData[0]['description'];
 
         //maincoon
-        final maincoonResponse = await http.get(Uri.parse(maincoonUrl));
+        final maincoonResponse = await http.get(Uri.parse(maincoonUrl), headers: headers);
         final maincoonData = jsonDecode(maincoonResponse.body);
         String maincoonDescription = maincoonData[0]['description'];
 
         //ragdoll
-        final ragdollResponse = await http.get(Uri.parse(ragdollUrl));
+        final ragdollResponse = await http.get(Uri.parse(ragdollUrl), headers: headers);
         final ragdollData = jsonDecode(ragdollResponse.body);
         String ragdollDescription = ragdollData[0]['description'];
 
         //aby
-        final abyResponse = await http.get(Uri.parse(abyUrl));
+        final abyResponse = await http.get(Uri.parse(abyUrl), headers: headers);
         final abyData = jsonDecode(abyResponse.body);
         String abyDescription = abyData[0]['description'];
 

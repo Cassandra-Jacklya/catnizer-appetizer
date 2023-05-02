@@ -115,8 +115,8 @@ class _CatCatalogue extends State<CatCatalogue> {
     } else {
       results = _catCatalogue
           .where((cat) => cat.name!
-              .toLowerCase()
-              .contains(userInput.toLowerCase()))
+          .toLowerCase()
+          .contains(userInput.toLowerCase()))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
@@ -166,78 +166,78 @@ class _CatCatalogue extends State<CatCatalogue> {
           Expanded(
             child: _chosenCat.isNotEmpty
                 ? GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1,
+              ),
+              itemCount: _chosenCat.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (index >= _chosenCat.length) {
+                  return const Center(
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(),
                     ),
-                    itemCount: _chosenCat.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index >= _chosenCat.length) {
-                        return const Center(
-                          child: SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      final cat = _chosenCat[index];
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CatDetails(cat: cat),
-                                  ),
-                                );
-                              },
-                              child: SizedBox(
-                                width: 500,
-                                height: 500,
-                                child: Container(
-                                  color:
-                                      const Color.fromRGBO(250, 200, 152, 100),
-                                  child: Card(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: FadeInImage.memoryNetwork(
-                                              placeholder: kTransparentImage,
-                                              image: cat.imageLink.toString(),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Text(
-                                            cat.name.toString(),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                  );
+                }
+                final cat = _chosenCat[index];
+                return Column(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CatDetails(cat: cat),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: 500,
+                          height: 500,
+                          child: Container(
+                            color:
+                            const Color.fromRGBO(250, 200, 152, 100),
+                            child: Card(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: FadeInImage.memoryNetwork(
+                                        placeholder: kTransparentImage,
+                                        image: cat.imageLink.toString(),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      cat.name.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    },
-                  )
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            )
                 : const Text(
-                    'No results found',
-                    style: TextStyle(fontSize: 24),
-                  ),
+              'No results found',
+              style: TextStyle(fontSize: 24),
+            ),
           ),
         ],
       ),

@@ -7,14 +7,14 @@ class FavouriteBloc extends Cubit<FavouriteEvent> {
 
   void alreadyAdded(String? collection, String? data) async {
     try {
-      CollectionReference collectionRef = FirebaseFirestore.instance.collection(collection!);
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection(collection ?? '');
       DocumentSnapshot<Object?> doc = await collectionRef.doc(data).get();
       bool docExists = doc.exists;
       if (docExists) {
-        emit(FavouriteTrue(true));
+        emit(FavouriteTrue(added: true));
       }
       else {
-        emit(FavouriteFalse(false));
+        emit(FavouriteFalse(added: false));
       }
     } on FirebaseException catch(e) {
       emit(FavouriteError());
@@ -26,13 +26,13 @@ class FavouriteBloc extends Cubit<FavouriteEvent> {
 abstract class FavouriteEvent {}
 
 class FavouriteFalse extends FavouriteEvent {
-  FavouriteFalse(this.added);
+  FavouriteFalse({required this.added});
 
   final bool added;
 }
 
 class FavouriteTrue extends FavouriteEvent {
-  FavouriteTrue(this.added);
+  FavouriteTrue({required this.added});
 
   final bool added;
 }
