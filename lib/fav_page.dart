@@ -122,8 +122,21 @@ class _FavPageState extends State<FavPage> {
                                   placeholder: kTransparentImage,
                                   image: data[i]['imageLink'].toString(),
                                   fit: BoxFit.cover,
+                                  ),
                                 ),
-                              )],
+                                Positioned(
+                                  bottom: 20,
+                                  child: Text(
+                                    data[i]['name'].toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontFamily: 'Raleway',
+                                      fontSize: 24
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         );
@@ -172,8 +185,21 @@ class _FavPageState extends State<FavPage> {
                                   placeholder: kTransparentImage,
                                   image: data[i]['imageLink'].toString(),
                                   fit: BoxFit.cover,
+                                  ),
                                 ),
-                              )],
+                                Positioned(
+                                  bottom: 20,
+                                  child: Text(
+                                    data[i]['name'].toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontFamily: 'Raleway',
+                                      fontSize: 24
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         );
