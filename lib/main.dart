@@ -100,6 +100,12 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _onItemTapped(int index) {
     if (mounted) {
       setState(() {
@@ -129,6 +135,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       default:
     }
   }
+
+  
 
   int _current = 0;
   @override
