@@ -101,10 +101,12 @@ class _CatCatalogue extends State<CatCatalogue> {
 
   Future<void> _fetchCats() async {
     final catCatalogue = await _fetchCat.fetchCat();
-    setState(() {
-      _catCatalogue = catCatalogue;
-      _chosenCat = _catCatalogue;
-    });
+    if (mounted) {
+      setState(() {
+        _catCatalogue = catCatalogue;
+        _chosenCat = _catCatalogue;
+      });
+    }
   }
 
   void _runFilter(String userInput) {
