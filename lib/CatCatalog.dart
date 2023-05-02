@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'cat_details.dart';
 import '/main.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'dart:convert';
 import 'cat.dart';
 import 'fav_page.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:bloc/bloc.dart';
 
 class FetchCat {
   int _currentOffset = 0;
@@ -27,7 +25,6 @@ class FetchCat {
       final catCatalogueData = jsonDecode(response.body);
       for (final cats in catCatalogueData) {
         catCatalogue.add(Cat(
-            userId: FirebaseAuth.instance.currentUser?.uid,
             name: cats['name'],
             origin: cats['origin'],
             imageLink: cats['image_link'],
