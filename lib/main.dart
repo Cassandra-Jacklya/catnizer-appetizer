@@ -1,6 +1,5 @@
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
-import 'package:catnizer/customShape.dart';
 import 'package:catnizer/componenets/button.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +12,6 @@ import 'fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,7 +98,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void dispose() {
     _animationController.dispose();
     _controller.dispose();
-    _animation.dispose();
     super.dispose();
   }
 
@@ -182,75 +179,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             final User? user =
                                 FirebaseAuth.instance.currentUser;
                             if (user == null) {
-                              return FadeTransition(
-                                opacity: _animationController,
-                                child: TextButton(
-                                    onPressed: () async {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LoginView()));
-                                    },
-                                    style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(18.0),
-                                                side: const BorderSide(
-                                                    color: Color.fromRGBO(
-                                                        242, 140, 40, 100))))),
-                                    child: const Text("Login")),
-                              );
+                                return FadeTransition(
+                                  opacity: _animationController,
+                                  child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
+                                );
                             } else {
-                              return ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ProfilePage()));
-                                  },
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                              side: const BorderSide(
-                                                  color: Color.fromRGBO(
-                                                      242, 140, 40, 100))))),
-                                  child: const Text('My Account'));
+                              return const CustomButton(buttonName: "My Account", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Color.fromRGBO(242, 140, 40, 100));
                             }
                           default:
                             return FadeTransition(
                               opacity: _animationController,
                               child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
                             );
-                          } else {
-                            return const CustomButton(buttonName: "My Account", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Color.fromRGBO(242, 140, 40, 100));
-                          }
-                        default:
-                          return FadeTransition(
-                            opacity: _animationController,
-                            child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
-                          );
                       }
                     }
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/catimage/catlogo.png',
-                    height: 35,
                   ),
                 ],
               ),
