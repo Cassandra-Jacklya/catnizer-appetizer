@@ -12,42 +12,44 @@ import 'package:transparent_image/transparent_image.dart';
 
 class FetchCat {
   int _currentOffset = 0;
+  final catCatalogue = <Cat>[];
 
   Future<List<Cat>> fetchCat() async {
-    final catCatalogue = <Cat>[];
-    final response = await http.get(
-      Uri.parse(
-          'https://api.api-ninjas.com/v1/cats?min_weight=1&offset=$_currentOffset'),
-      headers: {
-        'X-Api-Key': 'ZzQZjINuJDLyWUNYiJ1QYQ==hiuvuUGzKSpCkJmY',
-      },
-    );
-    if (response.statusCode == 200) {
-      final catCatalogueData = jsonDecode(response.body);
-      for (final cats in catCatalogueData) {
-        catCatalogue.add(Cat(
-            userId: FirebaseAuth.instance.currentUser?.uid,
-            name: cats['name'],
-            origin: cats['origin'],
-            imageLink: cats['image_link'],
-            length: cats['length'],
-            minWeight: cats['min_weight'],
-            maxWeight: cats['max_weight'],
-            minLifeExpectancy: cats['min_life_expectancy'],
-            maxLifeExpectancy: cats['max_life_expectancy'],
-            playfulness: cats['playfulness'],
-            familyFriendly: cats['family_friendly'],
-            grooming: cats['grooming']));
+    while (_currentOffset <= 80) {
+      final response = await http.get(
+        Uri.parse(
+            'https://api.api-ninjas.com/v1/cats?min_weight=1&offset=$_currentOffset'),
+        headers: {
+          'X-Api-Key': 'ZzQZjINuJDLyWUNYiJ1QYQ==hiuvuUGzKSpCkJmY',
+        },
+      );
+      if (response.statusCode == 200) {
+        final catCatalogueData = jsonDecode(response.body);
+        for (final cats in catCatalogueData) {
+          catCatalogue.add(Cat(
+              userId: FirebaseAuth.instance.currentUser?.uid,
+              name: cats['name'],
+              origin: cats['origin'],
+              imageLink: cats['image_link'],
+              length: cats['length'],
+              minWeight: cats['min_weight'],
+              maxWeight: cats['max_weight'],
+              minLifeExpectancy: cats['min_life_expectancy'],
+              maxLifeExpectancy: cats['max_life_expectancy'],
+              playfulness: cats['playfulness'],
+              familyFriendly: cats['family_friendly'],
+              grooming: cats['grooming']));
+        }
+      } else {
+        throw Exception('Failed to fetch data from the API');
       }
-    } else {
-      throw Exception('Failed to fetch data from the API');
+      _currentOffset += 20;
     }
-    _currentOffset += 20;
     return catCatalogue;
   }
+
+  List<Cat> getCatCatalogue() => catCatalogue;
 }
-
-
 
 class CatCatalogue extends StatefulWidget {
   const CatCatalogue({super.key});
@@ -58,7 +60,7 @@ class CatCatalogue extends StatefulWidget {
 
 class _CatCatalogue extends State<CatCatalogue> {
   int _selectedIndex = 0;
-  
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -87,33 +89,40 @@ class _CatCatalogue extends State<CatCatalogue> {
     }
   }
 
-  final _fetchCat = FetchCat();
-  final _cat = <Cat>[];
-  bool _isLoading = true;
-  bool _hasMore = true;
+  final FetchCat _fetchCat = FetchCat();
+  List<Cat> _catCatalogue = [];
+  var _chosenCat = [];
 
   @override
   void initState() {
+    _fetchCats();
     super.initState();
-    _isLoading = true;
-    _hasMore = true;
-    _loadMore();
   }
 
-  void _loadMore() {
-    _isLoading = true;
-    _fetchCat.fetchCat().then((List<Cat> fetchedList) {
-      if (fetchedList.isEmpty) {
-        setState(() {
-          _isLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _isLoading = false;
-          _cat.addAll(fetchedList);
-        });
-      }
+  Future<void> _fetchCats() async {
+    final catCatalogue = await _fetchCat.fetchCat();
+    setState(() {
+      _catCatalogue = catCatalogue;
+      _chosenCat = _catCatalogue;
+    });
+  }
+
+  void _runFilter(String userInput) {
+    var results = [];
+    if (userInput.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = _catCatalogue;
+    } else {
+      results = _catCatalogue
+          .where((cat) => cat.name!
+          .toLowerCase()
+          .contains(userInput.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+    // Refresh the UI
+    setState(() {
+      _chosenCat = results;
     });
   }
 
@@ -143,18 +152,28 @@ class _CatCatalogue extends State<CatCatalogue> {
       ),
       body: Column(
         children: [
+          TextField(
+            onChanged: (value) {
+              _runFilter(value);
+            },
+            decoration: InputDecoration(
+                labelText: 'Search for cat here...',
+                suffixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                )),
+          ),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            child: _chosenCat.isNotEmpty
+                ? GridView.builder(
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1,
               ),
-              itemCount: _hasMore ? _cat.length + 1 : _cat.length,
+              itemCount: _chosenCat.length,
               itemBuilder: (BuildContext context, int index) {
-                if (index >= _cat.length) {
-                  if (!_isLoading) {
-                    _loadMore();
-                  }
+                if (index >= _chosenCat.length) {
                   return const Center(
                     child: SizedBox(
                       height: 24,
@@ -163,7 +182,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                     ),
                   );
                 }
-                final cat = _cat[index];
+                final cat = _chosenCat[index];
                 return Column(
                   children: [
                     Expanded(
@@ -180,7 +199,8 @@ class _CatCatalogue extends State<CatCatalogue> {
                           width: 500,
                           height: 500,
                           child: Container(
-                            color: const Color.fromRGBO(250, 200, 152, 100),
+                            color:
+                            const Color.fromRGBO(250, 200, 152, 100),
                             child: Card(
                               child: Column(
                                 children: [
@@ -188,7 +208,6 @@ class _CatCatalogue extends State<CatCatalogue> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: FadeInImage.memoryNetwork(
-                                        fadeInDuration: const Duration(milliseconds: 300),
                                         placeholder: kTransparentImage,
                                         image: cat.imageLink.toString(),
                                         fit: BoxFit.cover,
@@ -214,6 +233,10 @@ class _CatCatalogue extends State<CatCatalogue> {
                   ],
                 );
               },
+            )
+                : const Text(
+              'No results found',
+              style: TextStyle(fontSize: 24),
             ),
           ),
         ],
