@@ -2,10 +2,10 @@ import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'CatCatalog.dart';
+//unused cat catalog, so remove
 import 'componenets/nav_bar.dart';
-import 'fav_page.dart';
-import 'main.dart';
+//unused fav page, so remove
+//unusued main page, so remove
 import 'cat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

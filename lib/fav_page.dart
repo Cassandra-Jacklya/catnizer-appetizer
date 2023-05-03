@@ -5,11 +5,11 @@ import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'CatCatalog.dart';
+//unused cat catalog, so remove
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'main.dart';
+//unused awesome flutter, so remove
+//unused main page, so remove
 
 class FavPage extends StatefulWidget {
   const FavPage({super.key});

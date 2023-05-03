@@ -133,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
           title: Image.asset("assets/catimage/catlogowhite.png", height: 30,),
           toolbarHeight: 90,

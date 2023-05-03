@@ -1,14 +1,14 @@
 import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cat_details.dart';
-import '/main.dart';
+//unused main page, so remove
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//unused awesome snack bar, so remove
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'cat.dart';
-import 'fav_page.dart';
+//unused fav page, so remove
 import 'package:transparent_image/transparent_image.dart';
 
 class FetchCat {
@@ -161,17 +161,17 @@ class _CatCatalogue extends State<CatCatalogue> {
                     onPressed: () {
                       _sortFunction('clear');
                     },
-                    child: Text('Clear')),
+                    child: const Text('Clear')),
                 OutlinedButton(
                     onPressed: () {
                       _sortFunction('playful');
                     },
-                    child: Text('Playful')),
+                    child: const Text('Playful')),
                 OutlinedButton(
                     onPressed: () {
                       _sortFunction('friendly');
                     },
-                    child: Text('Friendly')),
+                    child: const Text('Friendly')),
                 OutlinedButton(
                     onPressed: () {
                       _sortFunction('groom');
@@ -180,7 +180,7 @@ class _CatCatalogue extends State<CatCatalogue> {
               ],
             ),
           ),
-          Expanded(
+          Flexible(
             child: _chosenCat.isNotEmpty
                 ? GridView.builder(
                     gridDelegate:
@@ -203,7 +203,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                       var cat = _chosenCat[index];
                       return Column(
                         children: [
-                          Expanded(
+                          Flexible(
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.push(
