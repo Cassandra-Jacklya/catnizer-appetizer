@@ -1,3 +1,4 @@
+import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cat_details.dart';
 import '/main.dart';
@@ -28,17 +29,17 @@ class FetchCat {
         for (final cats in catCatalogueData) {
           catCatalogue.add(Cat(
               userId: FirebaseAuth.instance.currentUser?.uid,
-              name: cats['name'],
-              origin: cats['origin'],
-              imageLink: cats['image_link'],
-              length: cats['length'],
-              minWeight: cats['min_weight'],
-              maxWeight: cats['max_weight'],
-              minLifeExpectancy: cats['min_life_expectancy'],
-              maxLifeExpectancy: cats['max_life_expectancy'],
-              playfulness: cats['playfulness'],
-              familyFriendly: cats['family_friendly'],
-              grooming: cats['grooming']));
+              name: cats['name'] ?? 'Unknown',
+              origin: cats['origin'] ?? 'Unknown',
+              imageLink: cats['image_link'] ?? 'Unknown',
+              length: cats['length'] ?? 'Unknown',
+              minWeight: cats['min_weight'] ?? 0,
+              maxWeight: cats['max_weight'] ?? 0,
+              minLifeExpectancy: cats['min_life_expectancy'] ?? 0,
+              maxLifeExpectancy: cats['max_life_expectancy'] ?? 0,
+              playfulness: cats['playfulness'] ?? 0,
+              familyFriendly: cats['family_friendly'] ?? 0,
+              grooming: cats['grooming'] ?? 0));
         }
       } else {
         throw Exception('Failed to fetch data from the API');
@@ -59,36 +60,7 @@ class CatCatalogue extends StatefulWidget {
 }
 
 class _CatCatalogue extends State<CatCatalogue> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const MyHomePage(),
-              transitionDuration: Duration.zero),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const FavPage(),
-              transitionDuration: Duration.zero),
-        );
-        break;
-      default:
-    }
-  }
-
+  
   final FetchCat _fetchCat = FetchCat();
   List<Cat> _catCatalogue = [];
   var _chosenCat = [];
@@ -112,18 +84,38 @@ class _CatCatalogue extends State<CatCatalogue> {
   void _runFilter(String userInput) {
     var results = [];
     if (userInput.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
       results = _catCatalogue;
     } else {
       results = _catCatalogue
           .where((cat) =>
               cat.name!.toLowerCase().contains(userInput.toLowerCase()))
           .toList();
-      // we use the toLowerCase() method to make it case-insensitive
     }
-    // Refresh the UI
     setState(() {
       _chosenCat = results;
+    });
+  }
+
+  void _sortFunction(String sortOption) {
+    switch (sortOption) {
+      case 'clear':
+        _catCatalogue.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+        break;
+      case 'playful':
+        _catCatalogue
+            .sort((b, a) => (a.playfulness ?? 0).compareTo(b.playfulness ?? 0));
+        break;
+      case 'friendly':
+        _catCatalogue.sort(
+            (b, a) => (a.familyFriendly ?? 0).compareTo(b.familyFriendly ?? 0));
+        break;
+      case 'groom':
+        _catCatalogue
+            .sort((b, a) => (a.grooming ?? 0).compareTo(b.grooming ?? 0));
+        break;
+    }
+    setState(() {
+      _chosenCat = _catCatalogue;
     });
   }
 
@@ -143,24 +135,7 @@ class _CatCatalogue extends State<CatCatalogue> {
           shape: const RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.only(bottomRight: Radius.circular(30)))),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.cat),
-            label: 'Cats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: const CustomNavigationBar(index: 0),
       body: Column(
         children: [
           Padding(
@@ -175,6 +150,34 @@ class _CatCatalogue extends State<CatCatalogue> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   )),
+            ),
+          ),
+          Container(
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('clear');
+                    },
+                    child: Text('Clear')),
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('playful');
+                    },
+                    child: Text('Playful')),
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('friendly');
+                    },
+                    child: Text('Friendly')),
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('groom');
+                    },
+                    child: Text('Groom')),
+              ],
             ),
           ),
           Expanded(
@@ -196,7 +199,8 @@ class _CatCatalogue extends State<CatCatalogue> {
                           ),
                         );
                       }
-                      final cat = _chosenCat[index];
+
+                      var cat = _chosenCat[index];
                       return Column(
                         children: [
                           Expanded(

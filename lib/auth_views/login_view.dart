@@ -25,6 +25,7 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
   }
 
+  //clean up 
   @override
   void dispose() {
     _email.dispose();
@@ -35,7 +36,9 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+
+      //sign in app bar
+      appBar: AppBar(   
         centerTitle: true,
         title: const Text(
           "SIGN IN TO YOUR ACCOUNT",
@@ -54,6 +57,8 @@ class _LoginViewState extends State<LoginView> {
         ),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
+
+            //checks if connected 
             case ConnectionState.done:
               return SingleChildScrollView(
                 child: Column(
@@ -64,6 +69,8 @@ class _LoginViewState extends State<LoginView> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(40, 50, 40, 0),
                           child: SizedBox(
+
+                            //email text field
                             child: TextField(
                               controller: _email,
                               enableSuggestions: false,
@@ -73,14 +80,14 @@ class _LoginViewState extends State<LoginView> {
                                 hintText: "Enter your email here",
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
+                                    width: 3, 
                                     color: Color.fromRGBO(240, 140, 15, 100),
                                   ),
                                   borderRadius: BorderRadius.circular(50.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
+                                    width: 3, 
                                     color: Color.fromRGBO(240, 140, 15, 100),
                                   ),
                                   borderRadius: BorderRadius.circular(50.0),
@@ -92,6 +99,8 @@ class _LoginViewState extends State<LoginView> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                           child: SizedBox(
+
+                            //password text field
                             child: TextField(
                               controller: _password,
                               obscureText: true,
@@ -101,14 +110,14 @@ class _LoginViewState extends State<LoginView> {
                                 hintText: "Enter password",
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
+                                    width: 3, 
                                     color: Color.fromRGBO(240, 140, 10, 100),
                                   ),
                                   borderRadius: BorderRadius.circular(50.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
+                                    width: 3, 
                                     color: Color.fromRGBO(240, 140, 15, 100),
                                   ),
                                   borderRadius: BorderRadius.circular(50.0),
@@ -120,11 +129,13 @@ class _LoginViewState extends State<LoginView> {
                       ],
                     ),
 
-                    //continue here
+                    //login state bloc
                     BlocConsumer<LoginStateBloc, LoginState>(
                         listener: (context, state) {
                       if (state is AppStateInitial) {
                       } else if (state is AppStateLoggedIn) {
+
+                        //shows a dialog to show the user is logged in
                         showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
@@ -148,6 +159,8 @@ class _LoginViewState extends State<LoginView> {
                                   ],
                                 ));
                       } else if (state is AppStateError) {
+
+                        //shows an error dialog
                         showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
@@ -190,8 +203,7 @@ class _LoginViewState extends State<LoginView> {
                           onPressed: () async {
                             final email = _email.text;
                             final password = _password.text;
-                            BlocProvider.of<LoginStateBloc>(context)
-                                .initFirebase(email, password);
+                            BlocProvider.of<LoginStateBloc>(context).initFirebase(email, password);
                           },
                           child: const Text(
                             "Login",
@@ -231,7 +243,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               );
             default:
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
           }
         },
       ),

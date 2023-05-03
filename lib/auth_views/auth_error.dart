@@ -1,3 +1,4 @@
+//error class for possible errors thrown by firebase auth
 const Map<String, AuthError> authErrorMapping = {
   'user-not-found': AuthErrorUserNotFound(),
   'weak-password': AuthErrorWeakPassword(),
@@ -20,6 +21,8 @@ abstract class AuthError {
       const AuthErrorUnknown();
 }
 
+// auth/unknown
+
 class AuthErrorUnknown extends AuthError {
   const AuthErrorUnknown()
       : super(
@@ -27,6 +30,8 @@ class AuthErrorUnknown extends AuthError {
           dialogText: 'Unknown authentication error',
         );
 }
+
+// auth/user-not-found
 
 class AuthErrorUserNotFound extends AuthError {
   const AuthErrorUserNotFound()
@@ -66,6 +71,8 @@ class AuthErrorEmailAlreadyInUse extends AuthError {
           dialogText: 'Please choose another email to register with!',
         );
 }
+
+// auth/wrong-password
 
 class AuthErrorWrongPassword extends AuthError {
   const AuthErrorWrongPassword()
