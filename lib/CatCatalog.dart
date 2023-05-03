@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'cat.dart';
 //unused fav page, so remove
 import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class FetchCat {
   int _currentOffset = 0;
@@ -60,14 +61,20 @@ class CatCatalogue extends StatefulWidget {
 }
 
 class _CatCatalogue extends State<CatCatalogue> {
-  
   final FetchCat _fetchCat = FetchCat();
   List<Cat> _catCatalogue = [];
   var _chosenCat = [];
+  String _sortState = '';
+  var _controller = TextEditingController();
+
+  void clearText() {
+    _controller.clear();
+  }
 
   @override
   void initState() {
     _fetchCats();
+    _sortState = 'clear';
     super.initState();
   }
 
@@ -101,21 +108,22 @@ class _CatCatalogue extends State<CatCatalogue> {
     switch (sortOption) {
       case 'clear':
         break;
-      case 'playful':
+      case 'playfulness':
         _catCatalogue
             .sort((b, a) => (a.playfulness ?? 0).compareTo(b.playfulness ?? 0));
         break;
-      case 'friendly':
+      case 'familyFriendly':
         _catCatalogue.sort(
             (b, a) => (a.familyFriendly ?? 0).compareTo(b.familyFriendly ?? 0));
         break;
-      case 'groom':
+      case 'grooming':
         _catCatalogue
             .sort((b, a) => (a.grooming ?? 0).compareTo(b.grooming ?? 0));
         break;
     }
     setState(() {
       _chosenCat = _catCatalogue;
+      _sortState = sortOption;
     });
   }
 
@@ -141,6 +149,7 @@ class _CatCatalogue extends State<CatCatalogue> {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
             child: TextField(
+              controller: _controller,
               onChanged: (value) {
                 _runFilter(value);
               },
@@ -159,22 +168,26 @@ class _CatCatalogue extends State<CatCatalogue> {
               children: [
                 OutlinedButton(
                     onPressed: () {
+                      clearText();
                       _sortFunction('clear');
                     },
                     child: const Text('Clear')),
                 OutlinedButton(
                     onPressed: () {
-                      _sortFunction('playful');
+                      clearText();
+                      _sortFunction('playfulness');
                     },
                     child: const Text('Playful')),
                 OutlinedButton(
                     onPressed: () {
-                      _sortFunction('friendly');
+                      clearText();
+                      _sortFunction('familyFriendly');
                     },
                     child: const Text('Friendly')),
                 OutlinedButton(
                     onPressed: () {
-                      _sortFunction('groom');
+                      clearText();
+                      _sortFunction('grooming');
                     },
                     child: const Text('Groom')),
               ],
@@ -263,6 +276,73 @@ class _CatCatalogue extends State<CatCatalogue> {
                                               ),
                                             ),
                                           ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Visibility(
+                                                visible: _sortState == 'clear'
+                                                    ? false
+                                                    : true,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: Text(
+                                                    _sortState == 'playfulness'
+                                                        ? 'Playful: '
+                                                        : _sortState ==
+                                                                'familyFriendly'
+                                                            ? 'Friendly: '
+                                                            : _sortState ==
+                                                                    'grooming'
+                                                                ? 'Grooming: '
+                                                                : 'Something went wrong!',
+                                                    style: const TextStyle(
+                                                      fontFamily: 'Raleway',
+                                                      color: Color.fromRGBO(
+                                                          255, 145, 0, 0.979),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: _sortState == 'clear'
+                                                    ? false
+                                                    : true,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: RatingBar.builder(
+                                                    initialRating: _sortState ==
+                                                            'playfulness'
+                                                        ? cat.playfulness.toDouble()
+                                                        : _sortState ==
+                                                                'familyFriendly'
+                                                            ? cat.familyFriendly.toDouble()
+                                                            : _sortState ==
+                                                                    'grooming'
+                                                                ? cat.grooming.toDouble()
+                                                                : 0,
+                                                    direction: Axis.horizontal,
+                                                    allowHalfRating: true,
+                                                    itemCount: 5,
+                                                    itemSize: 15,
+                                                    ignoreGestures: true,
+                                                    itemBuilder: (context, _) =>
+                                                        const Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
+                                                    ),
+                                                    onRatingUpdate: (rating) {
+                                                      print(rating);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -276,8 +356,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                     },
                   )
                 : Column(
-                  
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Padding(
                         padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
