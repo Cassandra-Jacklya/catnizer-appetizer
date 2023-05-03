@@ -97,9 +97,9 @@ class _CatCatalogue extends State<CatCatalogue> {
   }
 
   void _sortFunction(String sortOption) {
+    _catCatalogue.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
     switch (sortOption) {
       case 'clear':
-        _catCatalogue.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
         break;
       case 'playful':
         _catCatalogue
@@ -176,7 +176,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                     onPressed: () {
                       _sortFunction('groom');
                     },
-                    child: Text('Groom')),
+                    child: const Text('Groom')),
               ],
             ),
           ),
