@@ -34,7 +34,19 @@ class _FavPageState extends State<FavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (AppBar(title: const Text("Meow Favourites"),)),
+      appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "Favourites",
+            style: TextStyle(
+                fontFamily: 'Raleway',
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.w600),
+          ),
+          shape: const RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.only(bottomRight: Radius.circular(30)))),
       bottomNavigationBar: const CustomNavigationBar(index: 2),
       body: BlocBuilder<FavouriteBloc, FavouriteEvent>(
         builder: (context, state) {
@@ -71,11 +83,14 @@ class _FavPageState extends State<FavPage> {
                               alignment: Alignment.center,
                               children: [AspectRatio(
                                 aspectRatio: 1.4,
-                                child: FadeInImage.memoryNetwork(
-                                  placeholder: kTransparentImage,
-                                  image: data[i]['imageLink'].toString(),
-                                  fit: BoxFit.cover,
-                                  ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: data[i]['imageLink'].toString(),
+                                    fit: BoxFit.cover,
+                                    ),
+                                ),
                                 ),
                                 Positioned(
                                   bottom: 20,
@@ -134,11 +149,14 @@ class _FavPageState extends State<FavPage> {
                               alignment: Alignment.center,
                               children: [AspectRatio(
                                 aspectRatio: 1.4,
-                                child: FadeInImage.memoryNetwork(
-                                  placeholder: kTransparentImage,
-                                  image: data[i]['imageLink'].toString(),
-                                  fit: BoxFit.cover,
-                                  ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: data[i]['imageLink'].toString(),
+                                    fit: BoxFit.cover,
+                                    ),
+                                ),
                                 ),
                                 Positioned(
                                   bottom: 20,
