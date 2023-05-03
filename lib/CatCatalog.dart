@@ -116,9 +116,8 @@ class _CatCatalogue extends State<CatCatalogue> {
       results = _catCatalogue;
     } else {
       results = _catCatalogue
-          .where((cat) => cat.name!
-          .toLowerCase()
-          .contains(userInput.toLowerCase()))
+          .where((cat) =>
+              cat.name!.toLowerCase().contains(userInput.toLowerCase()))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
@@ -132,8 +131,18 @@ class _CatCatalogue extends State<CatCatalogue> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cat Catalogue'),
-      ),
+          centerTitle: true,
+          title: const Text(
+            "Cat Catalogue",
+            style: TextStyle(
+                fontFamily: 'Raleway',
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.w600),
+          ),
+          shape: const RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.only(bottomRight: Radius.circular(30)))),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -154,92 +163,140 @@ class _CatCatalogue extends State<CatCatalogue> {
       ),
       body: Column(
         children: [
-          TextField(
-            onChanged: (value) {
-              _runFilter(value);
-            },
-            decoration: InputDecoration(
-                labelText: 'Search for cat here...',
-                suffixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                )),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+            child: TextField(
+              onChanged: (value) {
+                _runFilter(value);
+              },
+              decoration: InputDecoration(
+                  labelText: 'Search for cat here...',
+                  suffixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  )),
+            ),
           ),
           Expanded(
             child: _chosenCat.isNotEmpty
                 ? GridView.builder(
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-              ),
-              itemCount: _chosenCat.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (index >= _chosenCat.length) {
-                  return const Center(
-                    child: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
                     ),
-                  );
-                }
-                final cat = _chosenCat[index];
-                return Column(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CatDetails(cat: cat),
-                            ),
-                          );
-                        },
-                        child: SizedBox(
-                          width: 500,
-                          height: 500,
-                          child: Container(
-                            color:
-                            const Color.fromRGBO(250, 200, 152, 100),
-                            child: Card(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: FadeInImage.memoryNetwork(
-                                        placeholder: kTransparentImage,
-                                        image: cat.imageLink.toString(),
-                                        fit: BoxFit.cover,
+                    itemCount: _chosenCat.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index >= _chosenCat.length) {
+                        return const Center(
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      final cat = _chosenCat[index];
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CatDetails(cat: cat),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: 500,
+                                height: 500,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.12),
+                                        blurRadius: 1,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 0),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Card(
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child:
+                                                    FadeInImage.memoryNetwork(
+                                                  placeholder:
+                                                      kTransparentImage,
+                                                  image:
+                                                      cat.imageLink.toString(),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                              cat.name.toString(),
+                                              style: const TextStyle(
+                                                fontFamily: 'Raleway',
+                                                color: Color.fromRGBO(
+                                                    255, 145, 0, 0.979),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                      cat.name.toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
+                        ],
+                      );
+                    },
+                  )
+                : Column(
+                  
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: Text(
+                          'No Meow Found !!!',
+                          style: TextStyle(
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: Color.fromRGBO(255, 145, 0, 0.979)),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            )
-                : const Text(
-              'No results found',
-              style: TextStyle(fontSize: 24),
-            ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: SizedBox(
+                          child: Image.asset(
+                            'assets/catimage/c3.png',
+                            height: 200,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
           ),
         ],
       ),
