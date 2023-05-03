@@ -24,6 +24,7 @@ class _RegisterViewState extends State<RegisterView> {
     super.initState();
   }
 
+  //clean up
   @override
   void dispose() {
     _email.dispose();
@@ -63,6 +64,8 @@ class _RegisterViewState extends State<RegisterView> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(40, 50, 40, 0),
                           child: SizedBox(
+
+                            //email text field
                             child: TextField(
                               controller: _email,
                               enableSuggestions: false,
@@ -96,18 +99,20 @@ class _RegisterViewState extends State<RegisterView> {
                               obscureText: true,
                               enableSuggestions: false,
                               autocorrect: false,
+
+                              //password text field
                               decoration: InputDecoration(
                                 hintText: "Enter password",
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
+                                    width: 3, 
                                     color: Color.fromRGBO(240, 140, 15, 100),
                                   ),
                                   borderRadius: BorderRadius.circular(50.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
+                                    width: 3, 
                                     color: Color.fromRGBO(240, 140, 15, 100),
                                   ),
                                   borderRadius: BorderRadius.circular(50.0),
@@ -122,6 +127,8 @@ class _RegisterViewState extends State<RegisterView> {
                         listener: (context, state) {
                       if (state is RegisterStateInitial) {
                       } else if (state is RegisterStateDone) {
+
+                        //show dialog to show user is registered 
                         showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
@@ -133,6 +140,8 @@ class _RegisterViewState extends State<RegisterView> {
                                       'You have registered using ${state.email}'),
                                   actions: <Widget>[
                                     TextButton(
+
+                                      //goes to log in page
                                       onPressed: () {
                                         Navigator.push(
                                             context,
@@ -145,6 +154,8 @@ class _RegisterViewState extends State<RegisterView> {
                                   ],
                                 ));
                       } else if (state is RegisterStateError) {
+
+                        //show error dialog upon registering
                         showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
@@ -204,7 +215,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               );
             default:
-              return const Text("Loading...");
+              return const Center(child: CircularProgressIndicator());
           }
         },
       ),
