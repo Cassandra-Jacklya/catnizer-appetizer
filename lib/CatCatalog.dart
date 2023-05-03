@@ -123,21 +123,34 @@ class _CatCatalogue extends State<CatCatalogue> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cat Catalogue'),
-      ),
+          centerTitle: true,
+          title: const Text(
+            "Cat Catalogue",
+            style: TextStyle(
+                fontFamily: 'Raleway',
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.w600),
+          ),
+          shape: const RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.only(bottomRight: Radius.circular(30)))),
       bottomNavigationBar: const CustomNavigationBar(index: 0),
       body: Column(
         children: [
-          TextField(
-            onChanged: (value) {
-              _runFilter(value);
-            },
-            decoration: InputDecoration(
-                labelText: 'Search for cat here...',
-                suffixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                )),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+            child: TextField(
+              onChanged: (value) {
+                _runFilter(value);
+              },
+              decoration: InputDecoration(
+                  labelText: 'Search for cat here...',
+                  suffixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  )),
+            ),
           ),
           Container(
             color: Colors.transparent,
@@ -204,34 +217,54 @@ class _CatCatalogue extends State<CatCatalogue> {
                                 width: 500,
                                 height: 500,
                                 child: Container(
-                                  color:
-                                      const Color.fromRGBO(250, 200, 152, 100),
-                                  child: Card(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.12),
+                                        blurRadius: 1,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 0),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Card(
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child:
+                                                    FadeInImage.memoryNetwork(
+                                                  placeholder:
+                                                      kTransparentImage,
+                                                  image:
+                                                      cat.imageLink.toString(),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
                                             padding: const EdgeInsets.all(5.0),
-                                            child: FadeInImage.memoryNetwork(
-                                              placeholder: kTransparentImage,
-                                              image: cat.imageLink.toString(),
-                                              fit: BoxFit.cover,
+                                            child: Text(
+                                              cat.name.toString(),
+                                              style: const TextStyle(
+                                                fontFamily: 'Raleway',
+                                                color: Color.fromRGBO(
+                                                    255, 145, 0, 0.979),
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Text(
-                                            '${cat.name.toString()}\n'
-                                            'Playful: ${cat.playfulness}\n'
-                                            'Friendly: ${cat.familyFriendly}\n'
-                                            'Groom: ${cat.grooming}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -242,9 +275,31 @@ class _CatCatalogue extends State<CatCatalogue> {
                       );
                     },
                   )
-                : const Text(
-                    'No results found',
-                    style: TextStyle(fontSize: 24),
+                : Column(
+                  
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: Text(
+                          'No Meow Found !!!',
+                          style: TextStyle(
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: Color.fromRGBO(255, 145, 0, 0.979)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: SizedBox(
+                          child: Image.asset(
+                            'assets/catimage/c3.png',
+                            height: 200,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
           ),
         ],
