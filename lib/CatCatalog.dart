@@ -1,3 +1,4 @@
+import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cat_details.dart';
 import '/main.dart';
@@ -59,36 +60,7 @@ class CatCatalogue extends StatefulWidget {
 }
 
 class _CatCatalogue extends State<CatCatalogue> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const MyHomePage(),
-              transitionDuration: Duration.zero),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const FavPage(),
-              transitionDuration: Duration.zero),
-        );
-        break;
-      default:
-    }
-  }
-
+  
   final FetchCat _fetchCat = FetchCat();
   List<Cat> _catCatalogue = [];
   var _chosenCat = [];
@@ -134,24 +106,7 @@ class _CatCatalogue extends State<CatCatalogue> {
       appBar: AppBar(
         title: const Text('Cat Catalogue'),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.cat),
-            label: 'Cats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: const CustomNavigationBar(index: 0),
       body: Column(
         children: [
           TextField(
@@ -160,7 +115,7 @@ class _CatCatalogue extends State<CatCatalogue> {
             },
             decoration: InputDecoration(
                 labelText: 'Search for cat here...',
-                suffixIcon: Icon(Icons.search),
+                suffixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 )),

@@ -1,6 +1,7 @@
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:catnizer/cat.dart';
 import 'package:catnizer/cat_details.dart';
+import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -21,35 +22,6 @@ class _FavPageState extends State<FavPage> {
 
   late FirebaseFirestore firebaseFirestore;
   late final user;
-  int _selectedIndex = 2;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const CatCatalogue(),
-            transitionDuration: Duration.zero),
-      );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const MyHomePage(),
-            transitionDuration: Duration.zero),
-      );
-        break;
-      case 2:
-        break;
-      default:
-    }
-  }
 
   @override
   void initState() {
@@ -63,26 +35,7 @@ class _FavPageState extends State<FavPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (AppBar(title: const Text("Meow Favourites"),)),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem> [
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.cat),
-            label: 'Cats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        unselectedItemColor: const Color.fromARGB(255, 154, 87, 20),
-        selectedItemColor: const Color.fromARGB(255, 255, 160, 65),
-      ),
+      bottomNavigationBar: const CustomNavigationBar(index: 2),
       body: BlocBuilder<FavouriteBloc, FavouriteEvent>(
         builder: (context, state) {
           if (state is FavouriteTrue) {
