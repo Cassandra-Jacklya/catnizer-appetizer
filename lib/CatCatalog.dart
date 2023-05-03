@@ -29,17 +29,17 @@ class FetchCat {
         for (final cats in catCatalogueData) {
           catCatalogue.add(Cat(
               userId: FirebaseAuth.instance.currentUser?.uid,
-              name: cats['name'],
-              origin: cats['origin'],
-              imageLink: cats['image_link'],
-              length: cats['length'],
-              minWeight: cats['min_weight'],
-              maxWeight: cats['max_weight'],
-              minLifeExpectancy: cats['min_life_expectancy'],
-              maxLifeExpectancy: cats['max_life_expectancy'],
-              playfulness: cats['playfulness'],
-              familyFriendly: cats['family_friendly'],
-              grooming: cats['grooming']));
+              name: cats['name'] ?? 'Unknown',
+              origin: cats['origin'] ?? 'Unknown',
+              imageLink: cats['image_link'] ?? 'Unknown',
+              length: cats['length'] ?? 'Unknown',
+              minWeight: cats['min_weight'] ?? 0,
+              maxWeight: cats['max_weight'] ?? 0,
+              minLifeExpectancy: cats['min_life_expectancy'] ?? 0,
+              maxLifeExpectancy: cats['max_life_expectancy'] ?? 0,
+              playfulness: cats['playfulness'] ?? 0,
+              familyFriendly: cats['family_friendly'] ?? 0,
+              grooming: cats['grooming'] ?? 0));
         }
       } else {
         throw Exception('Failed to fetch data from the API');
@@ -84,19 +84,38 @@ class _CatCatalogue extends State<CatCatalogue> {
   void _runFilter(String userInput) {
     var results = [];
     if (userInput.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
       results = _catCatalogue;
     } else {
       results = _catCatalogue
-          .where((cat) => cat.name!
-          .toLowerCase()
-          .contains(userInput.toLowerCase()))
+          .where((cat) =>
+              cat.name!.toLowerCase().contains(userInput.toLowerCase()))
           .toList();
-      // we use the toLowerCase() method to make it case-insensitive
     }
-    // Refresh the UI
     setState(() {
       _chosenCat = results;
+    });
+  }
+
+  void _sortFunction(String sortOption) {
+    switch (sortOption) {
+      case 'clear':
+        _catCatalogue.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+        break;
+      case 'playful':
+        _catCatalogue
+            .sort((b, a) => (a.playfulness ?? 0).compareTo(b.playfulness ?? 0));
+        break;
+      case 'friendly':
+        _catCatalogue.sort(
+            (b, a) => (a.familyFriendly ?? 0).compareTo(b.familyFriendly ?? 0));
+        break;
+      case 'groom':
+        _catCatalogue
+            .sort((b, a) => (a.grooming ?? 0).compareTo(b.grooming ?? 0));
+        break;
+    }
+    setState(() {
+      _chosenCat = _catCatalogue;
     });
   }
 
@@ -120,81 +139,113 @@ class _CatCatalogue extends State<CatCatalogue> {
                   borderRadius: BorderRadius.circular(10.0),
                 )),
           ),
+          Container(
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('clear');
+                    },
+                    child: Text('Clear')),
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('playful');
+                    },
+                    child: Text('Playful')),
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('friendly');
+                    },
+                    child: Text('Friendly')),
+                OutlinedButton(
+                    onPressed: () {
+                      _sortFunction('groom');
+                    },
+                    child: Text('Groom')),
+              ],
+            ),
+          ),
           Expanded(
             child: _chosenCat.isNotEmpty
                 ? GridView.builder(
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-              ),
-              itemCount: _chosenCat.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (index >= _chosenCat.length) {
-                  return const Center(
-                    child: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
                     ),
-                  );
-                }
-                final cat = _chosenCat[index];
-                return Column(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CatDetails(cat: cat),
-                            ),
-                          );
-                        },
-                        child: SizedBox(
-                          width: 500,
-                          height: 500,
-                          child: Container(
-                            color:
-                            const Color.fromRGBO(250, 200, 152, 100),
-                            child: Card(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: FadeInImage.memoryNetwork(
-                                        placeholder: kTransparentImage,
-                                        image: cat.imageLink.toString(),
-                                        fit: BoxFit.cover,
-                                      ),
+                    itemCount: _chosenCat.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index >= _chosenCat.length) {
+                        return const Center(
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+
+                      var cat = _chosenCat[index];
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CatDetails(cat: cat),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: 500,
+                                height: 500,
+                                child: Container(
+                                  color:
+                                      const Color.fromRGBO(250, 200, 152, 100),
+                                  child: Card(
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: FadeInImage.memoryNetwork(
+                                              placeholder: kTransparentImage,
+                                              image: cat.imageLink.toString(),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            '${cat.name.toString()}\n'
+                                            'Playful: ${cat.playfulness}\n'
+                                            'Friendly: ${cat.familyFriendly}\n'
+                                            'Groom: ${cat.grooming}',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                      cat.name.toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            )
+                        ],
+                      );
+                    },
+                  )
                 : const Text(
-              'No results found',
-              style: TextStyle(fontSize: 24),
-            ),
+                    'No results found',
+                    style: TextStyle(fontSize: 24),
+                  ),
           ),
         ],
       ),
