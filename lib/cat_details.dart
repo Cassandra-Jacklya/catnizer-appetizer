@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'CatCatalog.dart';
+import 'componenets/nav_bar.dart';
 import 'fav_page.dart';
 import 'main.dart';
 import 'cat.dart';
@@ -20,41 +21,6 @@ class CatDetails extends StatefulWidget {
 }
 
 class _CatDetailsState extends State<CatDetails> {
-
-  int _selectedIndex = 1;
-  
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const CatCatalogue(),
-            transitionDuration: Duration.zero),
-      );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const MyHomePage(),
-            transitionDuration: Duration.zero),
-      );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const FavPage(),
-            transitionDuration: Duration.zero),
-      );
-        break;
-      default:
-    }
-  }
 
   Future<void> addFavourite(Cat cat) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -90,11 +56,11 @@ class _CatDetailsState extends State<CatDetails> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }).catchError((onError) {
-        print(onError);
+        // print(onError);
       });
     } on FirebaseAuthException catch(e) {
       //for developers
-      print("Error: ${e.code}");
+      // print("Error: ${e.code}");
     }
   }
 
@@ -120,7 +86,7 @@ class _CatDetailsState extends State<CatDetails> {
         });
     } on FirebaseException catch(e) {
       //for developers
-      print("Error: ${e.code}");
+      // print("Error: ${e.code}");
     }
   }
 
@@ -134,26 +100,7 @@ class _CatDetailsState extends State<CatDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Details")),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem> [
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.cat),
-            label: 'Cats',
-            ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          unselectedItemColor: const Color.fromARGB(255, 154, 87, 20),
-          selectedItemColor: const Color.fromARGB(255, 255, 160, 65),
-        ),
+      bottomNavigationBar: const CustomNavigationBar(index: 0),
       body: Center(
         child: Column(
           children: [
@@ -242,14 +189,6 @@ class _CatDetailsState extends State<CatDetails> {
                         ),
                       ],
                     );
-                    // return Align(
-                    //   child: Text("Meow! Can't seem to favourite cats now",
-                    //     style: TextStyle(fontWeight: FontWeight.w600,
-                    //       color: Colors.red.shade900,
-                    //       fontFamily: 'Raleway'
-                    //     ),
-                    //   )
-                    // );
                   }
                   else {
                     //should never happen
