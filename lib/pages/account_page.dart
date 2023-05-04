@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Email',
+                    child: Text(FirebaseAuth.instance.currentUser?.email ?? 'No user logged in',
                       style: Theme.of(context)
                         .textTheme
                         .titleMedium
