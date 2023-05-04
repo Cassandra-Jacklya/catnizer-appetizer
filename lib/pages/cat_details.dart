@@ -163,7 +163,7 @@ class _CatDetailsState extends State<CatDetails> {
                               flex: 3,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 15, 0, 20),
+                                    const EdgeInsets.fromLTRB(10, 15, 0, 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -175,7 +175,7 @@ class _CatDetailsState extends State<CatDetails> {
                                               color: Colors.white,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 24),
+                                              fontSize: 20),
                                         ),
                                       ],
                                     ),
@@ -273,8 +273,8 @@ class _CatDetailsState extends State<CatDetails> {
                           ],
                         ),
                       ),
-                         const Padding(
-                          padding: EdgeInsets.all(10),
+                      const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                           child: Divider(
                             thickness: 1,
                             color: Colors.white,
@@ -304,13 +304,13 @@ class _CatDetailsState extends State<CatDetails> {
                                     color: Colors.white,
                                     fontFamily: 'Raleway',
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 20)),
+                                    fontSize: 16)),
                             const Text(" to ",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Raleway',
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 20)),
+                                    fontSize: 16)),
                             Text(
                                 (widget.cat.maxLifeExpectancy)!
                                     .toInt()
@@ -319,13 +319,13 @@ class _CatDetailsState extends State<CatDetails> {
                                     color: Colors.white,
                                     fontFamily: 'Raleway',
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 20)),
+                                    fontSize: 16)),
                             const Text(" Years ",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Raleway',
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 20)),
+                                    fontSize: 16)),
                           ],
                         ),
                       ),
@@ -352,7 +352,7 @@ class _CatDetailsState extends State<CatDetails> {
                                               color: Colors.white,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 24))
+                                              fontSize: 20))
                                     ],
                                   ),
                                 ),
@@ -369,13 +369,13 @@ class _CatDetailsState extends State<CatDetails> {
                                               color: Colors.white,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 20)),
+                                              fontSize: 16)),
                                       const Text(" to ",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 20)),
+                                              fontSize: 16)),
                                       Text(
                                           (widget.cat.maxWeight)!
                                               .toInt()
@@ -384,13 +384,13 @@ class _CatDetailsState extends State<CatDetails> {
                                               color: Colors.white,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 20)),
+                                              fontSize: 16)),
                                       const Text(" KG ",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 20)),
+                                              fontSize: 16)),
                                     ],
                                   ),
                                 ),
@@ -403,41 +403,49 @@ class _CatDetailsState extends State<CatDetails> {
                               color: Colors.white,
                             ),
                           ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                                  child: Row(
-                                    children: const [
-                                      Text("Lenght",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Raleway',
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 24))
-                                    ],
-                                  ),
+                        ],
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.white,
+                          )),
+                      Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                child: Row(
+                                  children: const [
+                                    Text("Lenght",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Raleway',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 20))
+                                  ],
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  child: Row(
-                                    children: [
-                                      Text((widget.cat.length.toString()),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Raleway',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 20)),
-                                    ],
-                                  ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: Row(
+                                  children: [
+                                    Text((widget.cat.length.toString()),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Raleway',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16)),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -480,7 +488,7 @@ class _CatDetailsState extends State<CatDetails> {
                                           direction: Axis.horizontal,
                                           allowHalfRating: true,
                                           itemCount: 5,
-                                          itemSize: 40,
+                                          itemSize: 30,
                                           ignoreGestures: true,
                                           itemPadding:
                                               const EdgeInsets.symmetric(
@@ -542,7 +550,7 @@ class _CatDetailsState extends State<CatDetails> {
                                           direction: Axis.horizontal,
                                           allowHalfRating: true,
                                           itemCount: 5,
-                                          itemSize: 40,
+                                          itemSize: 30,
                                           ignoreGestures: true,
                                           itemPadding:
                                               const EdgeInsets.symmetric(
@@ -592,7 +600,7 @@ class _CatDetailsState extends State<CatDetails> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                      const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                   child: Row(
                                     children: [
                                       SizedBox(
@@ -603,7 +611,7 @@ class _CatDetailsState extends State<CatDetails> {
                                           direction: Axis.horizontal,
                                           allowHalfRating: true,
                                           itemCount: 5,
-                                          itemSize: 40,
+                                          itemSize: 30,
                                           ignoreGestures: true,
                                           itemPadding:
                                               const EdgeInsets.symmetric(
