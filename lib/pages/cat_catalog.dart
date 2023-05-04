@@ -63,6 +63,7 @@ class _CatCatalogue extends State<CatCatalogue> {
   var _chosenCat = [];
   String _sortState = '';
   var _controller = TextEditingController();
+  bool _isFetching = true;
 
   void clearText() {
     _controller.clear();
@@ -81,6 +82,7 @@ class _CatCatalogue extends State<CatCatalogue> {
       setState(() {
         _catCatalogue = catCatalogue;
         _chosenCat = _catCatalogue;
+        _isFetching = false;
       });
     }
   }
@@ -142,244 +144,319 @@ class _CatCatalogue extends State<CatCatalogue> {
               borderRadius:
                   BorderRadius.only(bottomRight: Radius.circular(30)))),
       bottomNavigationBar: const CustomNavigationBar(index: 0),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-            child: TextField(
-              controller: _controller,
-              onChanged: (value) {
-                _runFilter(value);
-              },
-              decoration: InputDecoration(
-                  labelText: 'Search for cat here...',
-                  suffixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  )),
+      body: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: TextField(
+                controller: _controller,
+                onChanged: (value) {
+                  _runFilter(value);
+                },
+                decoration: InputDecoration(
+                    labelText: 'Search for cat here...',
+                    suffixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    )),
+              ),
             ),
-          ),
-          Container(
-            color: Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                OutlinedButton(
-                    onPressed: () {
-                      clearText();
-                      _sortFunction('clear');
-                    },
-                    child: const Text('Clear')),
-                OutlinedButton(
-                    onPressed: () {
-                      clearText();
-                      _sortFunction('playfulness');
-                    },
-                    child: const Text('Playful')),
-                OutlinedButton(
-                    onPressed: () {
-                      clearText();
-                      _sortFunction('familyFriendly');
-                    },
-                    child: const Text('Friendly')),
-                OutlinedButton(
-                    onPressed: () {
-                      clearText();
-                      _sortFunction('grooming');
-                    },
-                    child: const Text('Groom')),
-              ],
+            Container(
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OutlinedButton(
+                      onPressed: () {
+                        clearText();
+                        _sortFunction('clear');
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: _sortState == 'clear'
+                                  ? const Color.fromRGBO(255, 145, 0, 1)
+                                  : const Color.fromRGBO(215, 215, 215, 1))),
+                      child: Text(
+                        'Clear',
+                        style: TextStyle(
+                            color: _sortState == 'clear'
+                                ? const Color.fromRGBO(255, 145, 0, 1)
+                                : Colors.black54),
+                      )),
+                  OutlinedButton(
+                      onPressed: () {
+                        clearText();
+                        _sortFunction('playfulness');
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: _sortState == 'playfulness'
+                                  ? const Color.fromRGBO(255, 145, 0, 1)
+                                  : const Color.fromRGBO(215, 215, 215, 1))),
+                      child: Text(
+                        'Playful',
+                        style: TextStyle(
+                            color: _sortState == 'playfulness'
+                                ? const Color.fromRGBO(255, 145, 0, 1)
+                                : Colors.black54),
+                      )),
+                  OutlinedButton(
+                      onPressed: () {
+                        clearText();
+                        _sortFunction('familyFriendly');
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: _sortState == 'familyFriendly'
+                                  ? const Color.fromRGBO(255, 145, 0, 1)
+                                  : const Color.fromRGBO(215, 215, 215, 1))),
+                      child: Text(
+                        'Friendly',
+                        style: TextStyle(
+                            color: _sortState == 'familyFriendly'
+                                ? const Color.fromRGBO(255, 145, 0, 1)
+                                : Colors.black54),
+                      )),
+                  OutlinedButton(
+                      onPressed: () {
+                        clearText();
+                        _sortFunction('grooming');
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: _sortState == 'grooming'
+                                  ? const Color.fromRGBO(255, 145, 0, 1)
+                                  : const Color.fromRGBO(215, 215, 215, 1))),
+                      child: Text(
+                        'Groom',
+                        style: TextStyle(
+                            color: _sortState == 'grooming'
+                                ? const Color.fromRGBO(255, 145, 0, 1)
+                                : Colors.black54),
+                      )),
+                ],
+              ),
             ),
-          ),
-          Flexible(
-            child: _chosenCat.isNotEmpty
-                ? GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: _chosenCat.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index >= _chosenCat.length) {
-                        return const Center(
-                          child: SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-
-                      var cat = _chosenCat[index];
-                      return Column(
-                        children: [
-                          Flexible(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CatDetails(cat: cat),
-                                  ),
-                                );
-                              },
-                              child: SizedBox(
-                                width: 500,
-                                height: 500,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.12),
-                                        blurRadius: 1,
-                                        spreadRadius: 2,
-                                        offset: const Offset(0, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: Card(
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child:
-                                                    FadeInImage.memoryNetwork(
-                                                  placeholder:
-                                                      kTransparentImage,
-                                                  image:
-                                                      cat.imageLink.toString(),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Text(
-                                              cat.name.toString(),
-                                              style: const TextStyle(
-                                                fontFamily: 'Raleway',
-                                                color: Color.fromRGBO(
-                                                    255, 145, 0, 0.979),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Visibility(
-                                                visible: _sortState == 'clear'
-                                                    ? false
-                                                    : true,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    _sortState == 'playfulness'
-                                                        ? 'Playful: '
-                                                        : _sortState ==
-                                                                'familyFriendly'
-                                                            ? 'Friendly: '
-                                                            : _sortState ==
-                                                                    'grooming'
-                                                                ? 'Grooming: '
-                                                                : 'Something went wrong!',
-                                                    style: const TextStyle(
-                                                      fontFamily: 'Raleway',
-                                                      color: Color.fromRGBO(
-                                                          255, 145, 0, 0.979),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+            Flexible(
+              child: _chosenCat.isNotEmpty
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: _chosenCat.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index >= _chosenCat.length) {
+                          return const Center(
+                            child: SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        var cat = _chosenCat[index];
+                        return Column(
+                          children: [
+                            Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CatDetails(cat: cat),
+                                    ),
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: 500,
+                                  height: 500,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.12),
+                                          blurRadius: 1,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0, 0),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: Card(
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child:
+                                                      FadeInImage.assetNetwork(
+                                                    placeholder:
+                                                    'assets/catimage/cat-running.gif',
+                                                    image:
+                                                        cat.imageLink.toString(),
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
-                                              Visibility(
-                                                visible: _sortState == 'clear'
-                                                    ? false
-                                                    : true,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: RatingBar.builder(
-                                                    initialRating: _sortState ==
-                                                            'playfulness'
-                                                        ? cat.playfulness.toDouble()
-                                                        : _sortState ==
-                                                                'familyFriendly'
-                                                            ? cat.familyFriendly.toDouble()
-                                                            : _sortState ==
-                                                                    'grooming'
-                                                                ? cat.grooming.toDouble()
-                                                                : 0,
-                                                    direction: Axis.horizontal,
-                                                    allowHalfRating: true,
-                                                    itemCount: 5,
-                                                    itemSize: 15,
-                                                    ignoreGestures: true,
-                                                    itemBuilder: (context, _) =>
-                                                        const Icon(
-                                                      Icons.star,
-                                                      color: Colors.amber,
-                                                    ),
-                                                    onRatingUpdate: (rating) {
-                                                      print(rating);
-                                                    },
-                                                  ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Text(
+                                                cat.name.toString(),
+                                                style: const TextStyle(
+                                                  fontFamily: 'RaleWay',
+                                                  color: Color.fromRGBO(
+                                                      255, 145, 0, 0.979),
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Visibility(
+                                                  visible: _sortState == 'clear'
+                                                      ? false
+                                                      : true,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5.0),
+                                                    child: Text(
+                                                      _sortState == 'playfulness'
+                                                          ? 'Playful: '
+                                                          : _sortState ==
+                                                                  'familyFriendly'
+                                                              ? 'Friendly: '
+                                                              : _sortState ==
+                                                                      'grooming'
+                                                                  ? 'Grooming: '
+                                                                  : 'Something went wrong!',
+                                                      style: const TextStyle(
+                                                        fontFamily: 'Raleway',
+                                                        color: Color.fromRGBO(
+                                                            255, 145, 0, 0.979),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Visibility(
+                                                  visible: _sortState == 'clear'
+                                                      ? false
+                                                      : true,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5.0),
+                                                    child: RatingBar.builder(
+                                                      initialRating: _sortState ==
+                                                              'playfulness'
+                                                          ? cat.playfulness
+                                                              .toDouble()
+                                                          : _sortState ==
+                                                                  'familyFriendly'
+                                                              ? cat.familyFriendly
+                                                                  .toDouble()
+                                                              : _sortState ==
+                                                                      'grooming'
+                                                                  ? cat.grooming
+                                                                      .toDouble()
+                                                                  : 0,
+                                                      direction: Axis.horizontal,
+                                                      allowHalfRating: true,
+                                                      itemCount: 5,
+                                                      itemSize: 15,
+                                                      ignoreGestures: true,
+                                                      itemBuilder: (context, _) =>
+                                                          const Icon(
+                                                        Icons.star,
+                                                        color: Colors.amber,
+                                                      ),
+                                                      onRatingUpdate: (rating) {
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
-                        child: Text(
-                          'No Meow Found !!!',
-                          style: TextStyle(
-                              fontFamily: 'Raleway',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20,
-                              color: Color.fromRGBO(255, 145, 0, 0.979)),
+                          ],
+                        );
+                      },
+                    )
+                  : _isFetching
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                              child: Text(
+                                'Please wait while the cat is fetching the API...',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 20,
+                                    color: Color.fromRGBO(255, 145, 0, 0.979)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                              child: SizedBox(
+                                child: Image.asset(
+                                  'assets/catimage/cat-running.gif',
+                                  height: 200,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                              child: Text(
+                                'No Meow Found !!!',
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 20,
+                                    color: Color.fromRGBO(255, 145, 0, 0.979)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                              child: SizedBox(
+                                child: Image.asset(
+                                  'assets/catimage/c3.png',
+                                  height: 150,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                        child: SizedBox(
-                          child: Image.asset(
-                            'assets/catimage/c3.png',
-                            height: 100,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
