@@ -21,7 +21,6 @@ class CatDetails extends StatefulWidget {
 }
 
 class _CatDetailsState extends State<CatDetails> {
-
   Future<void> addFavourite(Cat cat) async {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
@@ -107,7 +106,7 @@ class _CatDetailsState extends State<CatDetails> {
           shape: const RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.only(bottomRight: Radius.circular(30)))),
-            bottomNavigationBar: const CustomNavigationBar(index: 0),
+      bottomNavigationBar: const CustomNavigationBar(index: 0),
       body: Stack(
         children: [
           Padding(
@@ -166,7 +165,7 @@ class _CatDetailsState extends State<CatDetails> {
                               flex: 3,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 15, 0, 10),
+                                    const EdgeInsets.fromLTRB(10, 15, 0, 20),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -271,35 +270,363 @@ class _CatDetailsState extends State<CatDetails> {
                               ),
                             ),
                             Row(
-                              children: [],
+                              children: const [],
                             )
                           ],
                         ),
                       ),
+                         const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.white,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                        child: Row(
+                          children: const [
+                            Text("Life Expectancy:",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20))
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Row(
+                          children: [
+                            Text(
+                                (widget.cat.minLifeExpectancy)!
+                                    .toInt()
+                                    .toString(),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20)),
+                            const Text(" to ",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20)),
+                            Text(
+                                (widget.cat.maxLifeExpectancy)!
+                                    .toInt()
+                                    .toString(),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20)),
+                            const Text(" Years ",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20)),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.white,
+                          )),
                       Row(
                         children: [
-                          SizedBox(
-                            child: RatingBar.builder(
-                              initialRating: (widget.cat.playfulness)!.toDouble(),
-
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-
-                              ignoreGestures: true,
-                              itemPadding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {
-                                print(rating);
-                              },
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                  child: Row(
+                                    children: const [
+                                      Text("Weight",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 24))
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                          (widget.cat.minWeight)!
+                                              .toInt()
+                                              .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20)),
+                                      const Text(" to ",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20)),
+                                      Text(
+                                          (widget.cat.maxWeight)!
+                                              .toInt()
+                                              .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20)),
+                                      const Text(" KG ",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20)),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          )
+                          ),
+                          const SizedBox(
+                            width: 1,
+                            child: VerticalDivider(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                  child: Row(
+                                    children: const [
+                                      Text("Lenght",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 24))
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: Row(
+                                    children: [
+                                      Text((widget.cat.length.toString()),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.white,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Text(
+                                      "PLAYFUL",
+                                      style: TextStyle(
+                                          fontFamily: "Raleway",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        child: RatingBar.builder(
+                                          initialRating:
+                                              (widget.cat.playfulness)!
+                                                  .toDouble(),
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 40,
+                                          ignoreGestures: true,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 4.0),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.white,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Text(
+                                      "FRIENDLY",
+                                      style: TextStyle(
+                                          fontFamily: "Raleway",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        child: RatingBar.builder(
+                                          initialRating:
+                                              (widget.cat.familyFriendly)!
+                                                  .toDouble(),
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 40,
+                                          ignoreGestures: true,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 4.0),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.white,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Text(
+                                      "GROOMING",
+                                      style: TextStyle(
+                                          fontFamily: "Raleway",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        child: RatingBar.builder(
+                                          initialRating:
+                                              (widget.cat.grooming)!.toDouble(),
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 40,
+                                          ignoreGestures: true,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 4.0),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
