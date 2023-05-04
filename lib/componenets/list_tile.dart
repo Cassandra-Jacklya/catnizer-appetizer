@@ -1,5 +1,5 @@
-import '../CatCatalog.dart';
-import '../fav_page.dart';
+import '../pages/cat_catalog.dart';
+import '../pages/fav_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {

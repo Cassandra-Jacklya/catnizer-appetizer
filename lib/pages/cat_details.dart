@@ -3,13 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'cat.dart';
+import '../model/cat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-import 'componenets/nav_bar.dart';
+import '../componenets/nav_bar.dart';
 
 class CatDetails extends StatefulWidget {
   const CatDetails({super.key, required this.cat});

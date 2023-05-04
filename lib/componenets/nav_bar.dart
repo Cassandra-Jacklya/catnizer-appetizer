@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../CatCatalog.dart';
-import '../fav_page.dart';
+import '../pages/cat_catalog.dart';
+import '../pages/fav_page.dart';
 import '../main.dart';
 
 class CustomNavigationBar extends StatefulWidget {

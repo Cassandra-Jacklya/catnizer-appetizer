@@ -5,10 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'CatCatalog.dart';
+import 'pages/cat_catalog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'bloc_state/bloc_register_auth.dart';
-import 'fav_page.dart';
+import 'pages/fav_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'bloc_state/bloc_main.dart';
@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           onTap: _onItemTapped,
         ),
         body: SingleChildScrollView(
-            child: Column(
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(

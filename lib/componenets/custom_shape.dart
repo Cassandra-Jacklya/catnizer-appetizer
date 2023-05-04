@@ -1,7 +1,4 @@
-//unused dart ui, so remove
-
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 
 class CustomShapeClipper extends CustomClipper<Path> {

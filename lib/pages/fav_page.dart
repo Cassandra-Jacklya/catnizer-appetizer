@@ -1,15 +1,12 @@
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
-import 'package:catnizer/cat.dart';
-import 'package:catnizer/cat_details.dart';
+import 'package:catnizer/model/cat.dart';
+import 'package:catnizer/pages/cat_details.dart';
 import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
-//unused cat catalog, so remove
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-//unused awesome flutter, so remove
-//unused main page, so remove
 
 class FavPage extends StatefulWidget {
   const FavPage({super.key});
@@ -35,6 +32,7 @@ class _FavPageState extends State<FavPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
           title: const Text(
             "Favourites",

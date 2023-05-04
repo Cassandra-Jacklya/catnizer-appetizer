@@ -1,14 +1,11 @@
 import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cat_details.dart';
-//unused main page, so remove
 import 'package:flutter/material.dart';
-//unused awesome snack bar, so remove
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'cat.dart';
-//unused fav page, so remove
+import '../model/cat.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -131,6 +128,7 @@ class _CatCatalogue extends State<CatCatalogue> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
           title: const Text(
             "Cat Catalogue",

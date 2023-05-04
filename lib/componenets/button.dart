@@ -1,6 +1,5 @@
-import 'package:catnizer/account_page.dart';
+import 'package:catnizer/pages/account_page.dart';
 import 'package:flutter/material.dart';
-
 import '../auth_views/login_view.dart';
 
 class CustomButton extends StatelessWidget {
