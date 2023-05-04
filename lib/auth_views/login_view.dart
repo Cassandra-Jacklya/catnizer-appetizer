@@ -137,6 +137,7 @@ class _LoginViewState extends State<LoginView> {
 
                         //shows a dialog to show the user is logged in
                         showDialog<String>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                                   shape: RoundedRectangleBorder(
@@ -162,6 +163,7 @@ class _LoginViewState extends State<LoginView> {
 
                         //shows an error dialog
                         showDialog<String>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                                   shape: RoundedRectangleBorder(

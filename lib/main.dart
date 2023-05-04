@@ -354,6 +354,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: GestureDetector(
                           onTap: () {
                             showDialog<String>(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (_) => AlertDialog(
                                       shape: RoundedRectangleBorder(
@@ -441,6 +442,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: GestureDetector(
                           onTap: () {
                             showDialog<String>(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (_) => AlertDialog(
                                       shape: RoundedRectangleBorder(
@@ -531,6 +533,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: GestureDetector(
                             onTap: () {
                               showDialog<String>(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (_) => AlertDialog(
                                         shape: RoundedRectangleBorder(
@@ -620,6 +623,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: GestureDetector(
                             onTap: () {
                               showDialog<String>(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (_) => AlertDialog(
                                         shape: RoundedRectangleBorder(
@@ -717,6 +721,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: GestureDetector(
                           onTap: () {
                             showDialog<String>(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (_) => AlertDialog(
                                       shape: RoundedRectangleBorder(
@@ -804,6 +809,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: GestureDetector(
                           onTap: () {
                             showDialog<String>(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (_) => AlertDialog(
                                       shape: RoundedRectangleBorder(
@@ -894,6 +900,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: GestureDetector(
                             onTap: () {
                               showDialog<String>(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (_) => AlertDialog(
                                         shape: RoundedRectangleBorder(
@@ -983,6 +990,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: GestureDetector(
                             onTap: () {
                               showDialog<String>(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (_) => AlertDialog(
                                         shape: RoundedRectangleBorder(
@@ -990,7 +998,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                               BorderRadius.circular(20),
                                         ),
                                         title: const Text(
-                                          'ABYSSINIANs',
+                                          'ABYSSINIANS',
                                           style: TextStyle(
                                               color: Color.fromRGBO(
                                                   240, 140, 10, 100),

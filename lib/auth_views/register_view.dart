@@ -130,6 +130,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                         //show dialog to show user is registered 
                         showDialog<String>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                                   shape: RoundedRectangleBorder(
@@ -157,6 +158,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                         //show error dialog upon registering
                         showDialog<String>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                                   shape: RoundedRectangleBorder(

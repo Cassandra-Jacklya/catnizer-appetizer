@@ -41,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       FloatingActionButton.extended(
                         onPressed: () {
                           showDialog<String>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text('Logout'),
@@ -76,6 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       FloatingActionButton.extended(
                         onPressed: () {
                           showDialog<String>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text('Delete Account'),

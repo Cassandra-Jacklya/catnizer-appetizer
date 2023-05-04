@@ -7,6 +7,7 @@ class DialogExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () => showDialog<String>(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: const Text('AlertDialog Title'),
