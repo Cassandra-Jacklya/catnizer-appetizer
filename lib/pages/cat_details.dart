@@ -422,7 +422,7 @@ class _CatDetailsState extends State<CatDetails> {
                                     const EdgeInsets.fromLTRB(10, 5, 10, 0),
                                 child: Row(
                                   children: const [
-                                    Text("Lenght",
+                                    Text("Length",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontFamily: 'Raleway',
