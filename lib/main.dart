@@ -1,6 +1,7 @@
 import 'package:catnizer/bloc_state/bloc_auth.dart';
 import 'package:catnizer/bloc_state/bloc_favourite.dart';
 import 'package:catnizer/componenets/button.dart';
+import 'package:catnizer/componenets/nav_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -98,36 +99,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _onItemTapped(int index) {
-    if (mounted) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const CatCatalogue(),
-              transitionDuration: Duration.zero),
-        );
-        break;
-      case 1:
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const FavPage(),
-            transitionDuration: Duration.zero),
-        );
-        break;
-      default:
-    }
-  }
-
   int _current = 0;
   @override
   Widget build(BuildContext context) {
@@ -139,24 +110,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           toolbarHeight: 90,
          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70), bottomRight: Radius.circular(70))),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.cat),
-              label: 'Cats',
-            ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heart),
-            label: 'Likes',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-        ),
+        bottomNavigationBar: const CustomNavigationBar(index: 1),
         body: SingleChildScrollView(
           child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
