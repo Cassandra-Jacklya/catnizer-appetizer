@@ -372,7 +372,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                         child: SizedBox(
                           child: Image.asset(
                             'assets/catimage/c3.png',
-                            height: 200,
+                            height: 100,
                           ),
                         ),
                       )
