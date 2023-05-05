@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<double> _animation;
   late final AnimationController _controller;
+
   final List<String> images = [
     'assets/catimage/f1.jpg',
     'assets/catimage/p2.jpg',
@@ -79,7 +80,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     BlocProvider.of<MainPageBloc>(context).getMainStuff();
-    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animationController.repeat(reverse: true);
 
     super.initState();
@@ -106,13 +108,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Image.asset("assets/catimage/catlogowhite.png", height: 30,),
+          title: Image.asset(
+            "assets/catimage/catlogowhite.png",
+            height: 30,
+          ),
           toolbarHeight: 90,
-         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70), bottomRight: Radius.circular(70))),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(70),
+                  bottomRight: Radius.circular(70))),
         ),
         bottomNavigationBar: const CustomNavigationBar(index: 1),
         body: SingleChildScrollView(
-          child: Column(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
@@ -131,21 +139,32 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             final User? user =
                                 FirebaseAuth.instance.currentUser;
                             if (user == null) {
-                                return FadeTransition(
-                                  opacity: _animationController,
-                                  child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
-                                );
+                              return FadeTransition(
+                                opacity: _animationController,
+                                child: const CustomButton(
+                                    buttonName: "Login",
+                                    borderColor:
+                                        Color.fromRGBO(242, 140, 40, 100),
+                                    fillColor: Colors.white),
+                              );
                             } else {
-                              return const CustomButton(buttonName: "My Account", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Color.fromRGBO(242, 140, 40, 100));
+                              return const CustomButton(
+                                  buttonName: "My Account",
+                                  borderColor:
+                                      Color.fromRGBO(242, 140, 40, 100),
+                                  fillColor: Color.fromRGBO(242, 140, 40, 100));
                             }
                           default:
                             return FadeTransition(
                               opacity: _animationController,
-                              child: const CustomButton(buttonName: "Login", borderColor: Color.fromRGBO(242, 140, 40, 100),fillColor: Colors.white),
+                              child: const CustomButton(
+                                  buttonName: "Login",
+                                  borderColor:
+                                      Color.fromRGBO(242, 140, 40, 100),
+                                  fillColor: Colors.white),
                             );
-                      }
-                    }
-                  ),
+                        }
+                      }),
                 ],
               ),
             ),
@@ -1036,7 +1055,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 );
               }
             }),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -10,6 +10,7 @@ class MainPageBloc extends Cubit<MainPageEvent> {
 
   void getMainStuff() async {
     var response = await http.get(Uri.parse('https://catfact.ninja/fact'));
+    
     const String persianUrl =
         'https://api.thecatapi.com/v1/breeds/search?q=persian';
     const String maincoonUrl =
