@@ -423,7 +423,7 @@ class _CatCatalogue extends State<CatCatalogue> {
                               child: SizedBox(
                                 child: Image.asset(
                                   'assets/catimage/cat-running.gif',
-                                  height: 200,
+                                  height: 150,
                                 ),
                               ),
                             )
